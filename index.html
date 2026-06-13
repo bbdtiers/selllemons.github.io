@@ -1,330 +1,699 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BBDTIERS</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700;900&display=swap');
+<meta charset="utf-8" />
+<title>Pet Battle Arena</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root{
+    --sand1:#f4c87a; --sand2:#e89b4a; --sky1:#9fd8ff; --sky2:#cdeeff;
+    --ice1:#dff2ff; --ice2:#a6d8f0;
+    --gold:#ffd24a; --green:#7ed957; --green-d:#4ea83a;
+    --panel:#2b2230cc; --panel2:#3a2f44cc; --text:#fff;
+    --legend:#ffb13d; --mythic:#ff5fb5; --epic:#a06bff; --rare:#5fa8ff; --common:#cfcfcf;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:'Comic Sans MS','Baloo 2',system-ui,sans-serif;color:var(--text);overflow:hidden;user-select:none}
+  body{background:#222}
+  #app{position:relative;width:100vw;height:100vh;overflow:hidden}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0a0d14;
-      color: #e0e0e0;
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+  /* Scenes */
+  .scene{position:absolute;inset:0;display:none;flex-direction:column}
+  .scene.active{display:flex}
 
-    /* ── NAV ── */
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 56px;
-      background: #0f1420;
-      border: 1px solid #1e2438;
-      border-radius: 14px;
-      margin: 14px 16px 0;
-      flex-shrink: 0;
-    }
+  /* Desert background */
+  .bg-desert{background:
+    radial-gradient(ellipse at 50% 90%, #d97a3a 0%, transparent 60%),
+    linear-gradient(to bottom, var(--sky1) 0%, var(--sky2) 45%, #f0b070 55%, var(--sand2) 100%);
+  }
+  .bg-ice{background:
+    radial-gradient(ellipse at 50% 90%, #7fb8d8 0%, transparent 60%),
+    linear-gradient(to bottom, #cfe9f7 0%, var(--ice1) 50%, var(--ice2) 100%);
+  }
+  .cactus{position:absolute;bottom:25%;width:80px;height:200px;background:#4ea83a;border-radius:40px;box-shadow:inset -10px 0 0 #3a8a2c;}
+  .cactus:before,.cactus:after{content:"";position:absolute;width:35px;height:90px;background:#4ea83a;border-radius:20px;box-shadow:inset -6px 0 0 #3a8a2c;}
+  .cactus:before{left:-30px;top:40px;transform:rotate(-20deg)}
+  .cactus:after{right:-30px;top:60px;transform:rotate(20deg)}
+  .mountain{position:absolute;bottom:25%;width:300px;height:180px;background:linear-gradient(#c97a4a,#8a4a2a);clip-path:polygon(0 100%,50% 0,100% 100%);opacity:.85}
 
-    .logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px;
-      color: #f0a500;
-      letter-spacing: 3px;
-    }
+  /* Top bar */
+  .topbar{position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
+  .topbar .left,.topbar .right{display:flex;gap:10px;pointer-events:auto}
+  .iconbtn{background:#fff;border:3px solid #2b2230;border-radius:14px;width:54px;height:54px;display:grid;place-items:center;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #2b2230;transition:transform .1s}
+  .iconbtn:hover{transform:translateY(-2px)}
+  .iconbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #2b2230}
+  .navbtn{background:linear-gradient(#e9d4ff,#b89cff);border:3px solid #2b2230;border-radius:18px;padding:10px 14px;min-width:90px;text-align:center;cursor:pointer;box-shadow:0 5px 0 #2b2230;color:#2b2230;font-weight:bold;font-size:18px;transition:transform .1s}
+  .navbtn .emoji{font-size:34px;display:block;line-height:1}
+  .navbtn:hover{transform:translateY(-2px)}
+  .navbtn:active{transform:translateY(3px);box-shadow:0 2px 0 #2b2230}
 
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-    }
-    .nav-links a {
-      color: #6a7090;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: #fff; }
+  /* Team row */
+  .team{position:absolute;left:0;right:0;bottom:32%;display:flex;justify-content:center;gap:24px;z-index:5;flex-wrap:wrap;padding:0 20px}
+  .pet{width:140px;text-align:center;position:relative;animation:bob 2.2s ease-in-out infinite}
+  .pet:nth-child(2){animation-delay:.2s}
+  .pet:nth-child(3){animation-delay:.4s}
+  .pet:nth-child(4){animation-delay:.6s}
+  .pet:nth-child(5){animation-delay:.8s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .pet .lvl{display:inline-flex;align-items:center;gap:4px;background:transparent;color:#fff;font-weight:bold;font-size:14px;text-shadow:0 2px 0 #000,1px 0 0 #000,-1px 0 0 #000,0 -1px 0 #000}
+  .pet .lvl .star{color:var(--gold);font-size:18px;filter:drop-shadow(0 1px 0 #000)}
+  .pet .name{font-size:13px;font-weight:bold;text-shadow:0 2px 0 #000,1px 0 0 #000,-1px 0 0 #000}
+  .pet .rarity{font-size:18px;font-weight:900;letter-spacing:1px;-webkit-text-stroke:1.5px #000}
+  .pet .rarity.Legendary{color:var(--legend)}
+  .pet .rarity.Mythic{color:var(--mythic)}
+  .pet .rarity.Epic{color:var(--epic)}
+  .pet .rarity.Rare{color:var(--rare)}
+  .pet .rarity.Common{color:var(--common)}
+  .pet .body{font-size:78px;line-height:1;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
+  .pet .stats{display:flex;justify-content:center;gap:14px;margin-top:6px;font-weight:bold;text-shadow:0 2px 0 #000,1px 0 0 #000,-1px 0 0 #000}
+  .pet .stats .s{display:flex;align-items:center;gap:3px;font-size:16px}
+  .pet.empty{opacity:.35}
+  .pet.empty .body::before{content:"➕"}
+  .pet.empty .body{font-size:50px;background:rgba(0,0,0,.15);border:3px dashed #fff5;border-radius:20px;height:90px;display:grid;place-items:center}
 
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #0a0d14;
-      border: 1px solid #2a2f3f;
-      border-radius: 10px;
-      padding: 0 12px;
-      height: 34px;
-      width: 190px;
-    }
-    .search-bar svg { width: 13px; height: 13px; stroke: #555; flex-shrink: 0; }
-    .search-bar input {
-      background: none; border: none; outline: none;
-      color: #aaa; font-size: 13px; width: 100%;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .search-bar input::placeholder { color: #555; }
+  /* Bottom HUD */
+  .hud{position:absolute;bottom:0;left:0;right:0;padding:20px;display:flex;justify-content:center;align-items:flex-end;gap:30px;z-index:6}
+  .playbtn{background:linear-gradient(#b8f06a,var(--green));border:4px solid #2b2230;border-radius:24px;width:200px;height:110px;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 0 #2b2230;text-align:center;transition:transform .1s}
+  .playbtn:hover{transform:translateY(-3px)}
+  .playbtn:active{transform:translateY(5px);box-shadow:0 3px 0 #2b2230}
+  .playbtn .tri{font-size:38px;color:#fff;-webkit-text-stroke:2px #2b2230}
+  .playbtn .lbl{font-size:32px;font-weight:900;color:#fff;-webkit-text-stroke:2px #2b2230;letter-spacing:1px}
+  .sidebtn{cursor:pointer;text-align:center;transition:transform .1s;position:relative}
+  .sidebtn:hover{transform:translateY(-3px)}
+  .sidebtn .ico{width:90px;height:90px;border-radius:20px;display:grid;place-items:center;font-size:50px;border:3px solid #2b2230;box-shadow:0 6px 0 #2b2230}
+  .sidebtn.chests .ico{background:linear-gradient(#ff9bd1,#ff5fa8)}
+  .sidebtn.pets .ico{background:linear-gradient(#b8f06a,var(--green))}
+  .sidebtn .cap{font-weight:900;color:#fff;-webkit-text-stroke:1.5px #2b2230;font-size:22px;margin-top:4px}
+  .badge{position:absolute;top:-6px;right:-6px;background:#ff3b3b;color:#fff;border:2px solid #2b2230;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-weight:bold;font-size:14px}
 
-    /* ── TABS ROW ── */
-    .tabs-wrap {
-      margin: 10px 16px 0;
-      flex-shrink: 0;
-    }
-    .tabs {
-      display: flex;
-      gap: 6px;
-    }
-    .tab {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 22px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: #555;
-      cursor: pointer;
-      border-radius: 10px;
-      border: 1px solid #1e2438;
-      background: #0f1420;
-      transition: all 0.15s;
-    }
-    .tab:hover { color: #aaa; border-color: #2a3040; }
-    .tab.active {
-      color: #fff;
-      background: #161d30;
-      border-color: #2e3a5a;
-      box-shadow: inset 0 -2px 0 #f0a500;
-    }
+  /* XP bar */
+  .xpbar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:min(560px,90%);text-align:center;z-index:7}
+  .xpbar .track{height:14px;border:3px solid #2b2230;border-radius:10px;background:#fff;overflow:hidden;box-shadow:0 3px 0 #2b2230}
+  .xpbar .fill{height:100%;background:linear-gradient(#ffd24a,#ff9b1e);transition:width .4s}
+  .xpbar .lbl{font-weight:900;color:#fff;-webkit-text-stroke:1.5px #2b2230;font-size:18px;margin-bottom:2px}
 
-    /* ── PLAYERS CONTAINER ── */
-    .players-wrap {
-      flex: 1;
-      margin: 10px 16px 16px;
-      background: #0f1420;
-      border: 1px solid #1e2438;
-      border-radius: 18px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+  /* Currency chips */
+  .chips{display:flex;gap:8px;align-items:center;background:var(--panel);border:3px solid #2b2230;border-radius:20px;padding:6px 12px;color:#fff;font-weight:900}
+  .chip{display:flex;align-items:center;gap:5px;font-size:18px}
+  .chip .ic{font-size:20px}
 
-    .list-header {
-      display: grid;
-      grid-template-columns: 90px 1fr 110px 160px;
-      padding: 10px 16px;
-      font-size: 10px;
-      color: #333;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border-bottom: 1px solid #141825;
-    }
-    .list-header div:nth-child(3) { text-align: center; }
-    .list-header div:nth-child(4) { text-align: right; padding-right: 16px; }
+  /* Battle scene */
+  .battle{display:none}
+  .battle.active{display:flex}
+  .arena{position:absolute;inset:0;display:flex}
+  .side{flex:1;position:relative;overflow:hidden}
+  .side.left{background:
+    linear-gradient(to bottom, var(--sky1) 0%, var(--sky2) 45%, #f0b070 55%, var(--sand2) 100%);}
+  .side.right{background:
+    linear-gradient(to bottom, #cfe9f7 0%, var(--ice1) 50%, var(--ice2) 100%);}
+  .igloo{position:absolute;bottom:32%;left:50%;transform:translateX(-50%);width:120px;height:90px;background:radial-gradient(circle at 50% 100%, #fff 60%, #cfe9f7 100%);border:3px solid #2b2230;border-radius:60px 60px 0 0}
+  .igloo:after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:40px;height:30px;background:#2b2230;border-radius:20px 20px 0 0}
+  .playerbar{position:absolute;top:18px;display:flex;align-items:center;gap:8px;background:var(--panel);border:3px solid #2b2230;border-radius:18px;padding:6px 12px;z-index:5}
+  .playerbar.l{left:18px}
+  .playerbar.r{right:18px;flex-direction:row-reverse}
+  .playerbar .avatar{width:46px;height:46px;border-radius:50%;background:#a78bfa;display:grid;place-items:center;font-size:24px;border:2px solid #2b2230}
+  .playerbar .nm{font-weight:900;font-size:18px;color:#fff;-webkit-text-stroke:1px #000}
 
-    .row {
-      display: grid;
-      grid-template-columns: 90px 1fr 110px 160px;
-      align-items: center;
-      min-height: 72px;
-      border-bottom: 1px solid #141825;
-      transition: background 0.15s;
-    }
-    .row:last-child { border-bottom: none; }
-    .row:hover { background: #131929; }
+  .speedctrl{position:absolute;top:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:6}
+  .speedctrl button{background:#fff;border:3px solid #2b2230;border-radius:12px;padding:6px 14px;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 4px 0 #2b2230;color:#2b2230}
+  .speedctrl button.on{background:linear-gradient(#ffd24a,#ff9b1e);color:#fff;-webkit-text-stroke:1px #2b2230}
 
-    .rank-block {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 12px;
-      height: 100%;
-      min-height: 72px;
-      border-right: 1px solid #141825;
-    }
-    .rank-block.gold   { background: #1a1200; }
-    .rank-block.silver { background: #111111; }
-    .rank-block.bronze { background: #130a00; }
+  .arena .team-row{position:absolute;bottom:30%;display:flex;gap:10px;align-items:flex-end}
+  .arena .team-row.l{left:14px}
+  .arena .team-row.r{right:14px;flex-direction:row-reverse}
+  .arena .pet{width:110px}
+  .arena .pet .body{font-size:62px}
+  .floatdmg{position:absolute;font-weight:900;font-size:22px;color:#fff;-webkit-text-stroke:2px #2b2230;pointer-events:none;animation:floatup 1s forwards}
+  @keyframes floatup{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-60px);opacity:0}}
+  .hpbar{height:8px;border:2px solid #2b2230;border-radius:6px;background:#fff;margin-top:4px;overflow:hidden}
+  .hpbar .f{height:100%;background:linear-gradient(#ff7676,#d22)}
+  .winner{position:absolute;inset:0;display:grid;place-items:center;background:#0008;z-index:20}
+  .winner .card{background:linear-gradient(#fff,#ffe6a0);color:#2b2230;padding:30px 40px;border:4px solid #2b2230;border-radius:24px;text-align:center;box-shadow:0 10px 0 #2b2230;min-width:300px}
+  .winner h2{margin:0 0 8px;font-size:36px}
+  .winner .rew{margin:14px 0;font-size:22px;font-weight:900}
+  .winner button{margin-top:10px;background:linear-gradient(#b8f06a,var(--green));border:3px solid #2b2230;color:#fff;-webkit-text-stroke:1px #2b2230;font-size:22px;font-weight:900;padding:10px 24px;border-radius:16px;cursor:pointer;box-shadow:0 5px 0 #2b2230}
 
-    .rank-num { font-family: 'Bebas Neue', sans-serif; font-size: 26px; min-width: 24px; text-align: center; }
-    .rank-num.gold   { color: #f0a500; }
-    .rank-num.silver { color: #b0b0b0; }
-    .rank-num.bronze { color: #cd7f32; }
-    .rank-num.plain  { color: #2e3450; }
+  /* Modal */
+  .modal{position:absolute;inset:0;background:#0009;display:none;justify-content:center;align-items:center;z-index:30;padding:20px}
+  .modal.active{display:flex}
+  .modal .panel{background:linear-gradient(#fff,#fce7c9);color:#2b2230;border:4px solid #2b2230;border-radius:24px;padding:24px;max-width:900px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 10px 0 #2b2230;position:relative}
+  .modal h2{margin-top:0;font-size:30px;text-align:center}
+  .modal .close{position:absolute;top:10px;right:10px;background:#ff3b3b;color:#fff;border:3px solid #2b2230;width:42px;height:42px;border-radius:50%;font-weight:900;font-size:20px;cursor:pointer;box-shadow:0 4px 0 #2b2230}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+  .card{background:#fff8e6;border:3px solid #2b2230;border-radius:16px;padding:10px;text-align:center;position:relative;box-shadow:0 4px 0 #2b2230;cursor:pointer;transition:transform .1s}
+  .card:hover{transform:translateY(-3px)}
+  .card.selected{outline:4px solid var(--green);outline-offset:-2px}
+  .card .e{font-size:50px}
+  .card .nm{font-weight:900;font-size:14px;margin-top:4px}
+  .card .r{font-size:11px;font-weight:900;letter-spacing:1px}
+  .card .r.Legendary{color:var(--legend)}
+  .card .r.Mythic{color:var(--mythic)}
+  .card .r.Epic{color:var(--epic)}
+  .card .r.Rare{color:var(--rare)}
+  .card .r.Common{color:#666}
+  .card .st{font-size:12px;color:#444;margin-top:2px;font-weight:bold}
+  .card .lv{position:absolute;top:4px;left:4px;background:#2b2230;color:#fff;font-size:11px;padding:2px 6px;border-radius:10px;font-weight:900}
+  .card .inteam{position:absolute;top:4px;right:4px;background:var(--green);color:#fff;font-size:11px;padding:2px 6px;border-radius:10px;font-weight:900}
 
-    .avatar {
-      width: 38px; height: 38px; border-radius: 8px;
-      background: #1a2035; border: 1px solid #252d48;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: #8890b0; flex-shrink: 0;
-    }
+  .shop-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px}
+  .chest{background:linear-gradient(#ffd1a3,#ff9b5e);border:3px solid #2b2230;border-radius:18px;padding:18px;text-align:center;box-shadow:0 5px 0 #2b2230}
+  .chest h3{margin:6px 0;font-size:22px}
+  .chest .e{font-size:60px}
+  .chest .cost{margin-top:6px;font-weight:900;font-size:18px}
+  .chest button{margin-top:8px;background:linear-gradient(#b8f06a,var(--green));color:#fff;-webkit-text-stroke:1px #2b2230;border:3px solid #2b2230;border-radius:14px;padding:8px 16px;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 4px 0 #2b2230}
+  .chest button:disabled{filter:grayscale(.7);opacity:.6;cursor:not-allowed}
 
-    .player-block { padding: 12px 14px; }
-    .player-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
-    .rank-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 3px 10px; border-radius: 6px;
-      font-size: 11px; font-weight: 600; border: 1px solid;
-    }
-    .rank-badge .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .pts { color: #3a4060; font-size: 10px; margin-left: 3px; }
+  .toast{position:absolute;top:80px;left:50%;transform:translateX(-50%);background:#2b2230;color:#fff;padding:10px 18px;border-radius:14px;border:3px solid #fff;font-weight:900;z-index:50;animation:fade 2.5s forwards}
+  @keyframes fade{0%{opacity:0;transform:translate(-50%,-10px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}
 
-    .badge-gm  { background: #1a0a30; color: #d4a8ff; border-color: #6d28d940; }
-    .badge-gm .dot { background: #a855f7; }
-    .badge-m   { background: #081630; color: #93c5fd; border-color: #2563eb40; }
-    .badge-m .dot { background: #60a5fa; }
-    .badge-ace { background: #061a10; color: #6ee7b7; border-color: #05966940; }
-    .badge-ace .dot { background: #34d399; }
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .actions button{background:linear-gradient(#b8f06a,var(--green));color:#fff;-webkit-text-stroke:1px #2b2230;border:3px solid #2b2230;border-radius:14px;padding:8px 16px;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 4px 0 #2b2230}
+  .actions button.danger{background:linear-gradient(#ff8a8a,#ff3b3b)}
+  .actions button.alt{background:linear-gradient(#ffd24a,#ff9b1e)}
 
-    .region-cell { display: flex; align-items: center; justify-content: center; }
-    .region {
-      padding: 3px 14px; border-radius: 6px;
-      font-size: 12px; font-weight: 800; letter-spacing: 1px;
-    }
-    .na { background: #3a0a0a; color: #ff7070; border: 1px solid #7a1515; }
-    .eu { background: #0a1235; color: #7090ff; border: 1px solid #153080; }
-
-    .rank-label-cell { display: flex; align-items: center; justify-content: flex-end; padding-right: 16px; }
-    .rank-label { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-    .rank-label .dot { width: 6px; height: 6px; border-radius: 50%; }
-    .label-gm  { color: #d4a8ff; }
-    .label-gm .dot { background: #a855f7; }
-    .label-m   { color: #93c5fd; }
-    .label-m .dot { background: #60a5fa; }
-    .label-ace { color: #6ee7b7; }
-    .label-ace .dot { background: #34d399; }
-
-    .footer {
-      text-align: center; padding: 1.2rem;
-      color: #252a3a; font-size: 12px; flex-shrink: 0;
-    }
-
-    @media (max-width: 640px) {
-      .nav { margin: 8px 10px 0; padding: 0 1rem; }
-      .tabs-wrap { margin: 8px 10px 0; }
-      .players-wrap { margin: 8px 10px 10px; }
-      .list-header, .row { grid-template-columns: 72px 1fr 70px; }
-      .rank-label-cell { display: none; }
-      .list-header div:nth-child(4) { display: none; }
-    }
-  </style>
+  /* Reveal */
+  .reveal{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}
+  .reveal .pop{font-size:120px;animation:pop .6s ease-out}
+  @keyframes pop{0%{transform:scale(.2) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+</style>
 </head>
 <body>
+<div id="app">
 
-<nav class="nav">
-  <span class="logo">BBDTIERS</span>
-  <div class="nav-links">
-    <a href="#">Rankings</a>
-    <a href="#">Discord</a>
-  </div>
-  <div class="search-bar">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" placeholder="Search player..." />
-  </div>
-</nav>
+  <!-- HOME -->
+  <div class="scene active bg-desert" id="scene-home">
+    <div class="mountain" style="left:5%"></div>
+    <div class="mountain" style="left:35%;width:240px;height:140px"></div>
+    <div class="cactus" style="left:8%"></div>
+    <div class="cactus" style="left:25%;transform:scale(.8)"></div>
+    <div class="cactus" style="right:8%"></div>
 
-<div class="tabs-wrap">
-  <div class="tabs">
-    <div class="tab active">🏆 Overall</div>
-  </div>
-</div>
-
-<div class="players-wrap">
-  <div class="list-header">
-    <div># Player</div>
-    <div></div>
-    <div>Region</div>
-    <div>Rank</div>
-  </div>
-
-  <div class="row">
-    <div class="rank-block gold">
-      <div class="rank-num gold">1</div>
-      <div class="avatar">ZR</div>
+    <div class="topbar">
+      <div class="left">
+        <button class="iconbtn" title="Menu" onclick="openMenu()">☰</button>
+        <div class="chips">
+          <div class="chip"><span class="ic">🪙</span><span id="ui-coins">0</span></div>
+          <div class="chip"><span class="ic">💎</span><span id="ui-gems">0</span></div>
+          <div class="chip"><span class="ic">⭐</span><span id="ui-level">1</span></div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="navbtn" onclick="openShop()"><span class="emoji">🧺</span>Shop</div>
+        <div class="navbtn" onclick="openAlbum()"><span class="emoji">📒</span>Album</div>
+        <div class="navbtn" onclick="openPets()"><span class="emoji">🐾</span>Pets</div>
+      </div>
     </div>
-    <div class="player-block">
-      <div class="player-name">ZeroRekt</div>
-      <div class="rank-badge badge-gm"><span class="dot"></span>Combat Grandmaster<span class="pts">(450 pts)</span></div>
-    </div>
-    <div class="region-cell"><span class="region na">NA</span></div>
-    <div class="rank-label-cell"><span class="rank-label label-gm"><span class="dot"></span>Grandmaster</span></div>
-  </div>
 
-  <div class="row">
-    <div class="rank-block silver">
-      <div class="rank-num silver">2</div>
-      <div class="avatar">AX</div>
+    <div class="team" id="team-row"></div>
+
+    <div class="hud">
+      <div class="sidebtn chests" onclick="openChests()">
+        <div class="ico">🎁</div>
+        <div class="cap">Chests</div>
+      </div>
+      <div class="playbtn" onclick="startBattle()">
+        <div class="tri">▶</div>
+        <div class="lbl">PLAY</div>
+      </div>
+      <div class="sidebtn pets" onclick="openPets()">
+        <div class="ico">🐣</div>
+        <div class="cap">Pets</div>
+        <div class="badge" id="pets-badge">0</div>
+      </div>
     </div>
-    <div class="player-block">
-      <div class="player-name">AxelPvP</div>
-      <div class="rank-badge badge-m"><span class="dot"></span>Combat Master<span class="pts">(330 pts)</span></div>
+
+    <div class="xpbar">
+      <div class="lbl" id="xp-label">Lv. 1 (0/100)</div>
+      <div class="track"><div class="fill" id="xp-fill" style="width:0%"></div></div>
     </div>
-    <div class="region-cell"><span class="region eu">EU</span></div>
-    <div class="rank-label-cell"><span class="rank-label label-m"><span class="dot"></span>Master</span></div>
   </div>
 
-  <div class="row">
-    <div class="rank-block bronze">
-      <div class="rank-num bronze">3</div>
-      <div class="avatar">NX</div>
+  <!-- BATTLE -->
+  <div class="scene" id="scene-battle">
+    <div class="arena">
+      <div class="side left">
+        <div class="mountain" style="left:5%"></div>
+        <div class="cactus" style="left:10%"></div>
+        <div class="cactus" style="right:5%;transform:scale(.7)"></div>
+      </div>
+      <div class="side right">
+        <div class="igloo"></div>
+      </div>
     </div>
-    <div class="player-block">
-      <div class="player-name">NoxFrost</div>
-      <div class="rank-badge badge-m"><span class="dot"></span>Combat Master<span class="pts">(320 pts)</span></div>
+    <div class="playerbar l">
+      <div class="avatar">🧑</div>
+      <div>
+        <div class="nm" id="b-pname">you</div>
+        <div style="font-size:12px">⭐ <span id="b-plevel">1</span></div>
+      </div>
     </div>
-    <div class="region-cell"><span class="region na">NA</span></div>
-    <div class="rank-label-cell"><span class="rank-label label-m"><span class="dot"></span>Master</span></div>
-  </div>
-
-  <div class="row">
-    <div class="rank-block">
-      <div class="rank-num plain">4</div>
-      <div class="avatar">VX</div>
+    <div class="playerbar r">
+      <div class="avatar">👹</div>
+      <div>
+        <div class="nm" id="b-ename">enemy</div>
+        <div style="font-size:12px">⭐ <span id="b-elevel">1</span></div>
+      </div>
     </div>
-    <div class="player-block">
-      <div class="player-name">VexBlade</div>
-      <div class="rank-badge badge-ace"><span class="dot"></span>Combat Ace<span class="pts">(290 pts)</span></div>
+    <div class="speedctrl">
+      <button id="spd1" class="on" onclick="setSpeed(1)">1x</button>
+      <button id="spd2" onclick="setSpeed(2)">2x</button>
+      <button id="spd4" onclick="setSpeed(4)">4x</button>
     </div>
-    <div class="region-cell"><span class="region eu">EU</span></div>
-    <div class="rank-label-cell"><span class="rank-label label-ace"><span class="dot"></span>Ace</span></div>
-  </div>
-
-  <div class="row">
-    <div class="rank-block">
-      <div class="rank-num plain">5</div>
-      <div class="avatar">SK</div>
-    </div>
-    <div class="player-block">
-      <div class="player-name">SkyKill</div>
-      <div class="rank-badge badge-ace"><span class="dot"></span>Combat Ace<span class="pts">(245 pts)</span></div>
-    </div>
-    <div class="region-cell"><span class="region na">NA</span></div>
-    <div class="rank-label-cell"><span class="rank-label label-ace"><span class="dot"></span>Ace</span></div>
-  </div>
-
-  <div class="row">
-    <div class="rank-block">
-      <div class="rank-num plain">6</div>
-      <div class="avatar">CR</div>
-    </div>
-    <div class="player-block">
-      <div class="player-name">CrimsonArc</div>
-      <div class="rank-badge badge-ace"><span class="dot"></span>Combat Ace<span class="pts">(226 pts)</span></div>
-    </div>
-    <div class="region-cell"><span class="region eu">EU</span></div>
-    <div class="rank-label-cell"><span class="rank-label label-ace"><span class="dot"></span>Ace</span></div>
+    <div class="team-row l" id="battle-left"></div>
+    <div class="team-row r" id="battle-right"></div>
   </div>
 </div>
 
-<div class="footer">BBDTIERS © 2026 — Minecraft PvP Rankings</div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="panel">
+    <button class="close" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
 
+<script>
+/* =====================  DATA  ===================== */
+const PETS = [
+  {id:'african_penguin', name:'African Penguin', emoji:'🐧', base:{atk:25,hp:120}, rarities:['Common','Rare','Epic','Legendary']},
+  {id:'cactus_kitty',    name:'Cactus Kitty',    emoji:'🌵', base:{atk:22,hp:100}, rarities:['Rare','Epic','Legendary','Mythic']},
+  {id:'rattlesnake',     name:'Rattlesnake',     emoji:'🐍', base:{atk:40,hp:70 }, rarities:['Common','Rare','Epic','Legendary']},
+  {id:'emperor_penguin', name:'Emperor Penguin', emoji:'🐧', base:{atk:18,hp:85 }, rarities:['Common','Rare','Epic','Legendary']},
+  {id:'narwhal',         name:'Narwhal',         emoji:'🦄', base:{atk:55,hp:130}, rarities:['Epic','Legendary','Mythic']},
+  {id:'turtle',          name:'Turtle',          emoji:'🐢', base:{atk:30,hp:200}, rarities:['Common','Rare','Epic','Legendary']},
+  {id:'wizard_penguin',  name:'Wizard Penguin',  emoji:'🧙', base:{atk:80,hp:160}, rarities:['Epic','Legendary','Mythic']},
+  {id:'ice_kitty',       name:'Ice Kitty',       emoji:'🐱', base:{atk:35,hp:140}, rarities:['Rare','Epic','Legendary']},
+  {id:'seal',            name:'Seal',            emoji:'🦭', base:{atk:28,hp:160}, rarities:['Common','Rare','Epic','Legendary']},
+  {id:'capybara',        name:'Capybara',        emoji:'🦫', base:{atk:32,hp:170}, rarities:['Rare','Epic','Legendary']},
+  {id:'fox',             name:'Desert Fox',      emoji:'🦊', base:{atk:45,hp:90 }, rarities:['Rare','Epic','Legendary']},
+  {id:'dragon',          name:'Baby Dragon',     emoji:'🐲', base:{atk:90,hp:200}, rarities:['Legendary','Mythic']},
+];
+const RARITY_MULT = {Common:1, Rare:1.4, Epic:2, Legendary:3, Mythic:4.5};
+const RARITY_WEIGHT_DESERT = {Common:55, Rare:30, Epic:12, Legendary:2.5, Mythic:0.5};
+const RARITY_WEIGHT_ICE    = {Common:30, Rare:35, Epic:25, Legendary:8, Mythic:2};
+const RARITY_WEIGHT_GOLDEN = {Common:0,  Rare:30, Epic:40, Legendary:22, Mythic:8};
+
+const CHESTS = [
+  {id:'desert', name:'Desert Chest', emoji:'🧰', cost:100, currency:'coins', pool:'desert'},
+  {id:'ice',    name:'Ice Chest',    emoji:'❄️', cost:500, currency:'coins', pool:'ice'},
+  {id:'golden', name:'Golden Chest', emoji:'🏆', cost:25,  currency:'gems',  pool:'golden'},
+];
+const ENEMY_NAMES = ['kungen','thekingzombie','snowlord','frostbite','spikey','mooncat','blizzard','sandstorm','rocky','frosty'];
+
+/* =====================  STATE  ===================== */
+const DEFAULT = {
+  coins: 250, gems: 5, level: 1, xp: 0,
+  inventory: [], // {uid, id, rarity, level, xp}
+  team: [null,null,null,null,null],
+  unseen: 0,
+  battlesWon: 0,
+  album: {}, // id -> [rarities owned]
+};
+let S = load();
+function load(){
+  try{
+    const raw = localStorage.getItem('petbattle_save_v1');
+    if(!raw) return seedStarter(structuredClone(DEFAULT));
+    const d = JSON.parse(raw);
+    return {...structuredClone(DEFAULT), ...d};
+  }catch(e){return seedStarter(structuredClone(DEFAULT));}
+}
+function save(){ localStorage.setItem('petbattle_save_v1', JSON.stringify(S)); }
+function seedStarter(s){
+  const p1 = makePet('african_penguin','Rare');
+  const p2 = makePet('cactus_kitty','Rare');
+  const p3 = makePet('rattlesnake','Common');
+  s.inventory.push(p1,p2,p3);
+  s.team = [p1.uid, p2.uid, p3.uid, null, null];
+  registerAlbum(s,p1); registerAlbum(s,p2); registerAlbum(s,p3);
+  return s;
+}
+function registerAlbum(s,p){
+  s.album[p.id] = s.album[p.id] || [];
+  if(!s.album[p.id].includes(p.rarity)) s.album[p.id].push(p.rarity);
+}
+function uid(){return Math.random().toString(36).slice(2,10)}
+function makePet(id, rarity){
+  const def = PETS.find(p=>p.id===id);
+  return {uid:uid(), id, rarity, level:1, xp:0};
+}
+function petStats(p){
+  const def = PETS.find(d=>d.id===p.id);
+  const m = RARITY_MULT[p.rarity];
+  const lvm = 1 + (p.level-1)*0.15;
+  return {
+    atk: Math.round(def.base.atk * m * lvm),
+    hp:  Math.round(def.base.hp  * m * lvm),
+    def, name:def.name, emoji:def.emoji
+  };
+}
+function fmtNum(n){
+  if(n>=10000) return (n/1000).toFixed(1).replace('.0','')+'k';
+  if(n>=1000) return (n/1000).toFixed(1).replace('.0','')+'k';
+  return ''+n;
+}
+
+/* =====================  RENDER HOME  ===================== */
+function renderHome(){
+  document.getElementById('ui-coins').textContent = S.coins;
+  document.getElementById('ui-gems').textContent  = S.gems;
+  document.getElementById('ui-level').textContent = S.level;
+  const need = xpForLevel(S.level);
+  document.getElementById('xp-label').textContent = `Lv. ${S.level} (${S.xp}/${need})`;
+  document.getElementById('xp-fill').style.width = Math.min(100, S.xp/need*100)+'%';
+  document.getElementById('pets-badge').textContent = S.unseen;
+  const row = document.getElementById('team-row');
+  row.innerHTML = '';
+  S.team.forEach((u,i)=>{
+    const p = S.inventory.find(x=>x.uid===u);
+    if(!p){
+      row.insertAdjacentHTML('beforeend', `<div class="pet empty" onclick="openPets()"><div class="body"></div><div class="name">Empty</div></div>`);
+    } else {
+      const st = petStats(p);
+      row.insertAdjacentHTML('beforeend', `
+        <div class="pet">
+          <div class="lvl"><span class="star">⭐</span>${p.level} <span style="margin-left:4px">${st.name}</span></div>
+          <div class="rarity ${p.rarity}">${p.rarity}</div>
+          <div class="body">${st.emoji}</div>
+          <div class="stats">
+            <div class="s">🗡️ ${st.atk}</div>
+            <div class="s">❤️ ${fmtNum(st.hp)}</div>
+          </div>
+        </div>`);
+    }
+  });
+}
+function xpForLevel(lv){ return 100 + (lv-1)*150; }
+function gainXP(amount){
+  S.xp += amount;
+  while(S.xp >= xpForLevel(S.level)){ S.xp -= xpForLevel(S.level); S.level++; toast('🌟 Player level up! Lv '+S.level); }
+}
+function gainPetXP(uid, amount){
+  const p = S.inventory.find(x=>x.uid===uid); if(!p) return;
+  p.xp += amount;
+  const need = ()=> 50 + (p.level-1)*40;
+  while(p.xp >= need()){ p.xp -= need(); p.level++; }
+}
+
+/* =====================  CHESTS / SHOP  ===================== */
+function openChests(){ openShop(); }
+function openShop(){
+  let html = `<h2>🧺 Shop — Chests</h2><div class="shop-row">`;
+  CHESTS.forEach(c=>{
+    const canAfford = (c.currency==='coins'?S.coins:S.gems) >= c.cost;
+    html += `<div class="chest">
+      <div class="e">${c.emoji}</div>
+      <h3>${c.name}</h3>
+      <div class="cost">Cost: ${c.cost} ${c.currency==='coins'?'🪙':'💎'}</div>
+      <button ${canAfford?'':'disabled'} onclick="buyChest('${c.id}')">Open</button>
+      <div style="font-size:12px;margin-top:8px;opacity:.85">${chestOddsText(c)}</div>
+    </div>`;
+  });
+  html += `</div>
+  <div class="actions">
+    <button class="alt" onclick="buyGems()">💎 Buy 50 gems (free)</button>
+  </div>`;
+  showModal(html);
+}
+function chestOddsText(c){
+  const w = c.pool==='desert'?RARITY_WEIGHT_DESERT:c.pool==='ice'?RARITY_WEIGHT_ICE:RARITY_WEIGHT_GOLDEN;
+  const total = Object.values(w).reduce((a,b)=>a+b,0);
+  return Object.entries(w).filter(([,v])=>v>0).map(([k,v])=>`${k} ${(v/total*100).toFixed(1)}%`).join(' · ');
+}
+function buyGems(){ S.gems += 50; save(); renderHome(); toast('+50 💎 (demo)'); openShop(); }
+function buyChest(id){
+  const c = CHESTS.find(x=>x.id===id);
+  if((c.currency==='coins'?S.coins:S.gems) < c.cost){ toast('Not enough!'); return; }
+  if(c.currency==='coins') S.coins -= c.cost; else S.gems -= c.cost;
+  const pool = c.pool==='desert'?'desert':c.pool==='ice'?'ice':'golden';
+  const w = pool==='desert'?RARITY_WEIGHT_DESERT:pool==='ice'?RARITY_WEIGHT_ICE:RARITY_WEIGHT_GOLDEN;
+  const rarity = weightedPick(w);
+  const eligible = PETS.filter(p=>p.rarities.includes(rarity) && (pool!=='ice' || ['turtle','ice_kitty','seal','wizard_penguin','narwhal','emperor_penguin','dragon'].includes(p.id)) && (pool!=='desert' || ['african_penguin','cactus_kitty','rattlesnake','fox','capybara','dragon'].includes(p.id)) );
+  const pickFrom = eligible.length?eligible:PETS.filter(p=>p.rarities.includes(rarity));
+  const def = pickFrom[Math.floor(Math.random()*pickFrom.length)];
+  const pet = makePet(def.id, rarity);
+  S.inventory.push(pet);
+  registerAlbum(S,pet);
+  S.unseen++;
+  save();
+  showReveal(pet);
+}
+function weightedPick(w){
+  const total = Object.values(w).reduce((a,b)=>a+b,0);
+  let r = Math.random()*total;
+  for(const [k,v] of Object.entries(w)){ if((r-=v)<=0) return k; }
+  return Object.keys(w)[0];
+}
+function showReveal(pet){
+  const st = petStats(pet);
+  const html = `<h2>You got a pet!</h2>
+    <div class="reveal">
+      <div class="pop">${st.emoji}</div>
+      <div class="rarity ${pet.rarity}" style="font-size:22px;font-weight:900;-webkit-text-stroke:1.5px #000;color:var(--${pet.rarity==='Mythic'?'mythic':pet.rarity==='Legendary'?'legend':pet.rarity==='Epic'?'epic':pet.rarity==='Rare'?'rare':'common'})">${pet.rarity}</div>
+      <h3 style="margin:0">${st.name}</h3>
+      <div>🗡️ ${st.atk}  ❤️ ${st.hp}</div>
+      <div class="actions">
+        <button onclick="closeModal();openShop()">Open another</button>
+        <button class="alt" onclick="closeModal();openPets()">Go to pets</button>
+      </div>
+    </div>`;
+  showModal(html);
+  renderHome();
+}
+
+/* =====================  PETS / ALBUM  ===================== */
+function openPets(){
+  S.unseen = 0; save(); renderHome();
+  let html = `<h2>🐾 Your Pets (${S.inventory.length})</h2>
+  <p style="text-align:center;margin-top:0">Click to add/remove from your team (max 5).</p>
+  <div class="grid">`;
+  const sorted = [...S.inventory].sort((a,b)=> rarityRank(b.rarity)-rarityRank(a.rarity) || b.level-a.level);
+  sorted.forEach(p=>{
+    const st = petStats(p);
+    const inTeam = S.team.includes(p.uid);
+    html += `<div class="card ${inTeam?'selected':''}" onclick="toggleTeam('${p.uid}')">
+      <div class="lv">Lv ${p.level}</div>
+      ${inTeam?'<div class="inteam">TEAM</div>':''}
+      <div class="e">${st.emoji}</div>
+      <div class="nm">${st.name}</div>
+      <div class="r ${p.rarity}">${p.rarity}</div>
+      <div class="st">🗡️${st.atk} ❤️${fmtNum(st.hp)}</div>
+    </div>`;
+  });
+  html += `</div>
+  <div class="actions">
+    <button class="alt" onclick="autoTeam()">Auto-pick best team</button>
+    <button class="danger" onclick="sellDuplicates()">Sell extras (Common/Rare)</button>
+  </div>`;
+  showModal(html);
+}
+function rarityRank(r){return ['Common','Rare','Epic','Legendary','Mythic'].indexOf(r)}
+function toggleTeam(u){
+  const i = S.team.indexOf(u);
+  if(i>=0){ S.team[i]=null; }
+  else{
+    const slot = S.team.indexOf(null);
+    if(slot<0){ toast('Team is full'); return; }
+    S.team[slot] = u;
+  }
+  save(); openPets(); renderHome();
+}
+function autoTeam(){
+  const sorted = [...S.inventory].sort((a,b)=>{
+    const sa = petStats(a), sb = petStats(b);
+    return (sb.atk+sb.hp/5) - (sa.atk+sa.hp/5);
+  });
+  S.team = [0,1,2,3,4].map(i=> sorted[i]?sorted[i].uid:null);
+  save(); openPets(); renderHome();
+}
+function sellDuplicates(){
+  let gained = 0;
+  const keep = new Set(S.team.filter(Boolean));
+  S.inventory = S.inventory.filter(p=>{
+    if(keep.has(p.uid)) return true;
+    if(p.rarity==='Common' || p.rarity==='Rare'){
+      gained += p.rarity==='Common'?10:25;
+      return false;
+    }
+    return true;
+  });
+  S.coins += gained; save(); renderHome(); openPets(); toast(`+${gained} 🪙`);
+}
+
+function openAlbum(){
+  let html = `<h2>📒 Pet Album</h2>
+    <p style="text-align:center;margin-top:0">Discovered: ${Object.keys(S.album).length} / ${PETS.length}</p>
+    <div class="grid">`;
+  PETS.forEach(def=>{
+    const owned = S.album[def.id] || [];
+    const seen = owned.length>0;
+    html += `<div class="card" style="${seen?'':'filter:grayscale(1) brightness(.6);cursor:default'}">
+      <div class="e">${seen?def.emoji:'❓'}</div>
+      <div class="nm">${seen?def.name:'???'}</div>
+      <div class="st">${seen?owned.join(', '):'Not discovered'}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  showModal(html);
+}
+
+/* =====================  BATTLE  ===================== */
+let speed = 1; let battleTimer = null;
+function setSpeed(s){
+  speed = s;
+  ['spd1','spd2','spd4'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('spd'+s).classList.add('on');
+}
+function startBattle(){
+  const teamPets = S.team.map(u=>S.inventory.find(p=>p.uid===u)).filter(Boolean);
+  if(teamPets.length===0){ toast('Add a pet to your team first!'); openPets(); return; }
+  // build enemy team based on level
+  const enemyLevel = Math.max(1, Math.floor(S.level + Math.random()*2 - 1));
+  const enemySize = Math.min(5, 2+Math.floor(S.level/2));
+  const wt = S.level>=8?RARITY_WEIGHT_ICE:RARITY_WEIGHT_DESERT;
+  const enemy = [];
+  for(let i=0;i<enemySize;i++){
+    const rarity = weightedPick(wt);
+    const elig = PETS.filter(p=>p.rarities.includes(rarity));
+    const def = elig[Math.floor(Math.random()*elig.length)];
+    const e = makePet(def.id, rarity);
+    e.level = enemyLevel;
+    enemy.push(e);
+  }
+  const ename = ENEMY_NAMES[Math.floor(Math.random()*ENEMY_NAMES.length)];
+  document.getElementById('b-pname').textContent = 'you';
+  document.getElementById('b-plevel').textContent = S.level;
+  document.getElementById('b-ename').textContent = ename;
+  document.getElementById('b-elevel').textContent = enemyLevel;
+
+  // build runtime states
+  const left  = teamPets.map(p=>buildCombat(p,true));
+  const right = enemy.map(p=>buildCombat(p,false));
+  showScene('battle');
+  renderBattle(left,right);
+  runBattle(left,right);
+}
+function buildCombat(p,isPlayer){
+  const st = petStats(p);
+  return {pet:p, name:st.name, emoji:st.emoji, atk:st.atk, hp:st.hp, max:st.hp, isPlayer};
+}
+function renderBattle(left,right){
+  const L = document.getElementById('battle-left');
+  const R = document.getElementById('battle-right');
+  L.innerHTML = left.map((c,i)=>petBattleHTML(c,'l'+i)).join('');
+  R.innerHTML = right.map((c,i)=>petBattleHTML(c,'r'+i)).join('');
+}
+function petBattleHTML(c,id){
+  return `<div class="pet" id="bp-${id}" style="${c.hp<=0?'opacity:.25;filter:grayscale(1)':''}">
+    <div class="lvl"><span class="star">⭐</span>${c.pet.level}</div>
+    <div class="rarity ${c.pet.rarity}">${c.pet.rarity}</div>
+    <div class="body">${c.emoji}</div>
+    <div class="hpbar"><div class="f" style="width:${Math.max(0,c.hp/c.max*100)}%"></div></div>
+    <div class="stats"><div class="s">🗡️${c.atk}</div><div class="s">❤️${fmtNum(Math.max(0,c.hp))}</div></div>
+  </div>`;
+}
+function runBattle(left,right){
+  clearInterval(battleTimer);
+  let tick = 0;
+  battleTimer = setInterval(()=>{
+    tick++;
+    // each alive pet on left attacks first alive on right, and vice versa
+    const aliveR = right.filter(c=>c.hp>0);
+    const aliveL = left.filter(c=>c.hp>0);
+    if(!aliveL.length || !aliveR.length){
+      clearInterval(battleTimer);
+      endBattle(left,right);
+      return;
+    }
+    left.forEach((c,i)=>{ if(c.hp>0){ const t = right.find(x=>x.hp>0); if(t){ dealDmg(c,t,'r'+right.indexOf(t)); } }});
+    right.forEach((c,i)=>{ if(c.hp>0){ const t = left.find(x=>x.hp>0); if(t){ dealDmg(c,t,'l'+left.indexOf(t)); } }});
+    renderBattle(left,right);
+  }, 700/speed);
+}
+function dealDmg(attacker,target,domId){
+  const dmg = Math.max(1, Math.round(attacker.atk * (0.85+Math.random()*0.3)));
+  target.hp -= dmg;
+  const el = document.getElementById('bp-'+domId);
+  if(el){
+    const f = document.createElement('div');
+    f.className = 'floatdmg';
+    f.textContent = '-'+dmg;
+    f.style.left = (el.offsetLeft + 30) + 'px';
+    f.style.top  = (el.offsetTop) + 'px';
+    el.parentElement.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
+  }
+}
+function endBattle(left,right){
+  const won = left.some(c=>c.hp>0);
+  const coins = won ? 40 + S.level*15 + Math.floor(Math.random()*20) : 10;
+  const gems  = won ? (Math.random()<.25?1:0) : 0;
+  const xp    = won ? 30 + S.level*8 : 8;
+  if(won){ S.battlesWon++; S.coins+=coins; S.gems+=gems; gainXP(xp); left.forEach(c=>gainPetXP(c.pet.uid, Math.floor(xp/Math.max(1,left.length))));}
+  else { S.coins+=coins; gainXP(xp); }
+  save();
+  const card = document.createElement('div');
+  card.className = 'winner';
+  card.innerHTML = `<div class="card">
+    <h2>${won?'🏆 Victory!':'💀 Defeat'}</h2>
+    <div class="rew">+${coins} 🪙 ${gems?'· +'+gems+' 💎':''} · +${xp} XP</div>
+    <button onclick="this.closest('.winner').remove();backHome()">Continue</button>
+  </div>`;
+  document.getElementById('scene-battle').appendChild(card);
+}
+function backHome(){ clearInterval(battleTimer); showScene('home'); renderHome(); }
+
+/* =====================  MENU / MISC  ===================== */
+function openMenu(){
+  const html = `<h2>☰ Menu</h2>
+    <div style="text-align:center;line-height:1.7">
+      <div>Player Level: <b>${S.level}</b></div>
+      <div>Battles Won: <b>${S.battlesWon}</b></div>
+      <div>Pets owned: <b>${S.inventory.length}</b></div>
+      <div>Album: <b>${Object.keys(S.album).length}/${PETS.length}</b></div>
+    </div>
+    <div class="actions">
+      <button class="alt" onclick="exportSave()">Export save</button>
+      <button onclick="importSave()">Import save</button>
+      <button class="danger" onclick="resetAll()">Reset game</button>
+    </div>
+    <p style="text-align:center;font-size:12px;opacity:.7;margin-top:10px">Saved automatically in your browser (localStorage).</p>`;
+  showModal(html);
+}
+function exportSave(){
+  const text = JSON.stringify(S);
+  navigator.clipboard?.writeText(text);
+  toast('Copied save to clipboard');
+}
+function importSave(){
+  const text = prompt('Paste your save JSON:');
+  if(!text) return;
+  try{ S = {...structuredClone(DEFAULT), ...JSON.parse(text)}; save(); renderHome(); closeModal(); toast('Loaded!'); }
+  catch(e){ toast('Invalid save'); }
+}
+function resetAll(){
+  if(!confirm('Wipe all progress?')) return;
+  localStorage.removeItem('petbattle_save_v1');
+  S = load(); save(); renderHome(); closeModal(); toast('Game reset');
+}
+
+function showModal(html){
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+function showScene(name){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scene-'+name).classList.add('active');
+}
+function toast(msg){
+  const t = document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  document.getElementById('app').appendChild(t);
+  setTimeout(()=>t.remove(),2600);
+}
+
+renderHome();
+</script>
 </body>
 </html>
