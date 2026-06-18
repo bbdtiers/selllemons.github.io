@@ -28,15 +28,12 @@
 }
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);height:620px;overflow:hidden;transition:background .3s,color .3s}
 #game{display:grid;grid-template-columns:1fr 270px;height:620px;overflow:hidden;position:relative}
-
-/* LEFT */
 #left{display:flex;flex-direction:column;align-items:center;padding:10px 8px 6px;background:var(--bg);overflow:hidden;position:relative}
 #topbar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;margin-bottom:6px;gap:6px}
 h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);letter-spacing:.5px;line-height:1;white-space:nowrap}
 .hbtn{background:var(--panel);border:1.5px solid var(--border);border-radius:16px;padding:3px 9px;cursor:pointer;font-size:.72rem;font-weight:700;color:var(--text2);transition:background .2s;white-space:nowrap}
 .hbtn:hover{background:var(--border);color:var(--text)}
 #auth-status{font-size:.62rem;color:var(--text3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
-
 #money-display{background:var(--panel);border:2px solid var(--lemon);border-radius:14px;padding:7px 18px;text-align:center;width:100%;max-width:270px;margin-bottom:5px;box-shadow:0 3px 0 var(--lemon-d),0 5px 14px var(--shadow);transition:background .3s}
 #money-label{font-size:.62rem;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
 #money-amount{font-family:'Fredoka One',cursive;font-size:1.9rem;color:var(--green);line-height:1.1}
@@ -44,7 +41,6 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
 @keyframes mPop{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
 #money-per-sec{font-size:.64rem;color:var(--text3);font-weight:600}
 #click-value{font-family:'Fredoka One',cursive;font-size:.78rem;color:var(--green);background:var(--green-bg);border:1.5px solid var(--green-d);border-radius:8px;padding:2px 10px;margin-bottom:3px;transition:background .3s}
-
 #clicker-area{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:185px;height:185px;margin:0}
 #lemon-ring{position:absolute;width:165px;height:165px;border-radius:50%;border:3px solid transparent;pointer-events:none;transition:border-color .2s,box-shadow .2s;z-index:1}
 #lemon-ring.active{border-color:var(--lemon);box-shadow:0 0 18px 4px rgba(255,215,0,.35);animation:rPulse .5s ease infinite alternate}
@@ -56,17 +52,13 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
 @keyframes hBounce{0%{transform:scale(.90) translateY(4px)}100%{transform:scale(.94) translateY(1px)}}
 #hold-hint{font-size:.65rem;color:var(--text3);font-weight:700;margin-top:2px;transition:color .2s}
 #hold-hint.active{color:var(--lemon-dd)}
-
 .particle{position:fixed;pointer-events:none;border-radius:50%;animation:pBurst .7s ease-out forwards;z-index:9998}
 @keyframes pBurst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
 .float-num{position:fixed;pointer-events:none;font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--float-color);text-shadow:0 1px 3px rgba(0,0,0,.2);animation:fUp .9s ease-out forwards;z-index:9999}
 @keyframes fUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.2)}}
-
 #stats{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;width:100%;margin-top:5px}
 .stat-pill{background:var(--panel);border:1.5px solid var(--border);border-radius:20px;padding:2px 8px;font-size:.63rem;font-weight:700;color:var(--text2)}
 .stat-pill span{color:var(--green)}
-
-/* RIGHT */
 #right{background:var(--panel);border-left:2px solid var(--border);display:flex;flex-direction:column;height:620px;transition:background .3s,border-color .3s}
 #shop-header{padding:8px 12px 4px;border-bottom:1.5px solid var(--border);flex-shrink:0}
 #shop-header h2{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lemon-dd)}
@@ -78,12 +70,9 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
 #shop-content{flex:1;overflow-y:auto;overflow-x:hidden;min-height:0}
 #shop-content::-webkit-scrollbar{width:3px}
 #shop-content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-.shop-tab{display:none}
-.shop-tab.visible{display:block}
+.shop-tab{display:none}.shop-tab.visible{display:block}
 .shop-item{display:flex;align-items:center;gap:6px;padding:7px 10px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border)}
-.shop-item:hover{background:var(--shop-hover)}
-.shop-item.affordable{background:var(--shop-buy)}
-.shop-item.locked{opacity:.38;cursor:not-allowed}
+.shop-item:hover{background:var(--shop-hover)}.shop-item.affordable{background:var(--shop-buy)}.shop-item.locked{opacity:.38;cursor:not-allowed}
 .item-icon{font-size:1.3rem;width:26px;text-align:center;flex-shrink:0}
 .item-info{flex:1;min-width:0}
 .item-name{font-size:.75rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -92,20 +81,15 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
 .item-cost{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--coin)}
 .item-count{font-size:.58rem;color:var(--text3)}
 .item-owned{font-size:.58rem;background:var(--green);color:#fff;border-radius:8px;padding:1px 5px;display:inline-block}
-
 #prestige-section{padding:7px 12px;border-top:1.5px solid var(--border);flex-shrink:0}
 #prestige-btn{width:100%;background:var(--prestige-bg);border:none;border-radius:10px;color:#fff;font-family:'Fredoka One',cursive;font-size:.88rem;padding:7px;cursor:pointer;box-shadow:0 3px 0 var(--prestige-shadow);transition:transform .1s,opacity .2s;opacity:.45}
 #prestige-btn.ready{opacity:1}
 #prestige-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--prestige-shadow)}
 #prestige-info{font-size:.6rem;color:var(--text3);margin-top:3px;text-align:center}
 #save-bar{font-size:.58rem;color:var(--text3);text-align:center;padding:3px;border-top:1px solid var(--border);flex-shrink:0}
-
-/* MILESTONE */
 #milestone-wrap{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:500;pointer-events:none;width:max-content;max-width:96%}
 #milestone-banner{background:var(--lemon);border:2.5px solid var(--lemon-dd);border-radius:12px;padding:6px 16px;font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lemon-dd);box-shadow:0 4px 18px rgba(180,120,0,.3);opacity:0;transition:opacity .3s;text-align:center}
-
-/* MODAL OVERLAY */
-.overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center}
 .overlay.show{display:flex}
 .modal-box{background:var(--panel);border:2.5px solid var(--lemon);border-radius:18px;padding:22px;max-width:270px;width:92%;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.4)}
 .modal-box h2{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--lemon-dd);margin-bottom:6px}
@@ -114,25 +98,24 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
 .modal-btns button{flex:1;padding:8px;border-radius:9px;border:none;font-family:'Fredoka One',cursive;font-size:.88rem;cursor:pointer}
 .btn-confirm{background:var(--prestige-bg);color:#fff;box-shadow:0 2px 0 var(--prestige-shadow)}
 .btn-cancel{background:var(--panel2);color:var(--text2);border:1.5px solid var(--border)}
-
-/* AUTH MODAL SPECIFICS */
 .auth-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;padding:7px 10px;font-size:.8rem;color:var(--text);margin-bottom:8px;outline:none;font-family:'Nunito',sans-serif}
 .auth-input:focus{border-color:var(--lemon)}
 .btn-primary{width:100%;background:var(--lemon);border:none;border-radius:9px;padding:8px;font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lemon-dd);cursor:pointer;margin-bottom:6px}
 .btn-secondary{width:100%;background:none;border:1.5px solid var(--border);border-radius:9px;padding:7px;font-family:'Fredoka One',cursive;font-size:.82rem;color:var(--text2);cursor:pointer}
 .auth-err{font-size:.68rem;color:var(--red);margin-bottom:6px;min-height:16px}
 .auth-toggle{font-size:.68rem;color:var(--text3);margin-top:4px;cursor:pointer;text-decoration:underline}
-
 #toast{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);border-radius:9px;padding:5px 14px;font-size:.72rem;font-weight:700;opacity:0;transition:opacity .3s;z-index:900;pointer-events:none;white-space:nowrap}
 
-/* FIREBASE SETUP NOTICE */
-#setup-notice{position:absolute;inset:0;background:rgba(26,21,0,.97);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-#setup-notice h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--lemon);margin-bottom:10px}
-#setup-notice p{font-size:.78rem;color:#C8A84B;line-height:1.6;margin-bottom:12px;max-width:380px}
-#setup-notice code{font-size:.7rem;background:#2C2200;color:#FFD700;border-radius:6px;padding:2px 7px;font-family:monospace}
-#firebase-config-input{width:100%;max-width:400px;background:#231C00;border:1.5px solid #6B5200;border-radius:10px;padding:10px;font-size:.72rem;color:#F5E6A0;font-family:monospace;resize:vertical;min-height:120px;margin-bottom:10px}
-#apply-config-btn{background:var(--lemon);border:none;border-radius:10px;padding:9px 24px;font-family:'Fredoka One',cursive;font-size:1rem;color:#7A5C3A;cursor:pointer}
-#skip-firebase-btn{margin-top:8px;background:none;border:1px solid #4A3800;border-radius:8px;padding:6px 16px;font-size:.72rem;color:#7A6030;cursor:pointer}
+/* SETUP SCREEN */
+#setup-notice{position:absolute;inset:0;background:#111100;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;gap:8px}
+#setup-notice h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:#FFD700;margin-bottom:4px}
+#setup-notice p{font-size:.74rem;color:#C8A84B;line-height:1.55;max-width:400px}
+#setup-notice .hint{font-size:.68rem;color:#7A6030;background:#1E1800;border:1px solid #3A2E00;border-radius:8px;padding:8px 12px;max-width:420px;text-align:left;line-height:1.6}
+#firebase-config-input{width:100%;max-width:420px;background:#1E1800;border:1.5px solid #6B5200;border-radius:10px;padding:10px;font-size:.72rem;color:#F5E6A0;font-family:monospace;resize:vertical;min-height:100px}
+#firebase-config-input:focus{outline:none;border-color:#FFD700}
+#cfg-err{font-size:.7rem;color:#E74C3C;min-height:18px}
+#apply-config-btn{background:#FFD700;border:none;border-radius:10px;padding:9px 28px;font-family:'Fredoka One',cursive;font-size:1rem;color:#7A5C3A;cursor:pointer}
+#skip-firebase-btn{background:none;border:1px solid #4A3800;border-radius:8px;padding:5px 16px;font-size:.7rem;color:#7A6030;cursor:pointer}
 </style>
 </head>
 <body data-theme="dark">
@@ -148,14 +131,12 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
       </div>
     </div>
     <div id="auth-status">Not signed in — local save</div>
-
     <div id="money-display">
       <div id="money-label">💰 Total Money</div>
       <div id="money-amount">$0</div>
       <div id="money-per-sec">$0 / sec</div>
     </div>
     <div id="click-value">+$1 per click</div>
-
     <div id="clicker-area">
       <div id="lemon-ring"></div>
       <button id="lemon-btn" aria-label="Click or hold to sell lemons">
@@ -174,7 +155,6 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
       </button>
     </div>
     <div id="hold-hint">Hold to auto-click 🍋</div>
-
     <div id="stats" style="margin-top:5px">
       <div class="stat-pill">Sold: <span id="stat-clicks">0</span></div>
       <div class="stat-pill">Earned: <span id="stat-total">$0</span></div>
@@ -203,7 +183,6 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
   </div>
 </div>
 
-<!-- PRESTIGE MODAL -->
 <div class="overlay" id="prestige-modal">
   <div class="modal-box">
     <h2>🌟 Prestige!</h2>
@@ -215,7 +194,6 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
   </div>
 </div>
 
-<!-- AUTH MODAL -->
 <div class="overlay" id="auth-modal">
   <div class="modal-box">
     <h2 id="auth-title">🍋 Sign In</h2>
@@ -231,36 +209,34 @@ h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);lett
 
 <div id="toast"></div>
 
-<!-- FIREBASE SETUP SCREEN -->
+<!-- SETUP SCREEN -->
 <div id="setup-notice">
-  <h2>🔥 Firebase Setup</h2>
-  <p>Paste your Firebase config object below to enable cloud accounts. You'll get this from the Firebase Console → Project Settings → Your Apps.<br><br>
-  It looks like: <code>{ apiKey: "...", authDomain: "...", projectId: "..." }</code></p>
-  <textarea id="firebase-config-input" placeholder='Paste your firebaseConfig object here, e.g.:
-{
-  apiKey: "AIzaSy...",
-  authDomain: "my-app.firebaseapp.com",
-  projectId: "my-app",
-  storageBucket: "my-app.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123:web:abc"
-}'></textarea>
-  <button id="apply-config-btn">Connect Firebase 🔥</button>
+  <h2>🔥 Connect Firebase</h2>
+  <p>Paste your Firebase config below to enable cloud saves and accounts.</p>
+  <div class="hint">
+    Where to find it: Firebase Console → Project Settings (⚙️) → scroll to "Your apps" → click your web app → copy the config object
+  </div>
+  <textarea id="firebase-config-input" placeholder='Paste anything — the full const block, just the object, JSON, any format works:
+
+apiKey: "AIzaSy...",
+authDomain: "my-app.firebaseapp.com",
+projectId: "my-app",
+...'></textarea>
+  <div id="cfg-err"></div>
+  <button id="apply-config-btn">🔥 Connect Firebase</button>
   <button id="skip-firebase-btn">Skip — play without accounts</button>
 </div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
 <script>
-const LS_KEY = 'sell_lemons_save';
-const LS_CFG = 'sell_lemons_fb_config';
-const LS_THEME = 'sell_lemons_theme';
-const PCOLS = ['#FFD700','#FFB300','#FFF176','#A5D6A7','#66BB6A'];
+const LS_KEY='sell_lemons_save';
+const LS_CFG='sell_lemons_fb_config';
+const LS_THEME='sell_lemons_theme';
+const PCOLS=['#FFD700','#FFB300','#FFF176','#A5D6A7','#66BB6A'];
 
-const UPGRADES = [
+const UPGRADES=[
   {id:'u1',name:'Better Squeezer',icon:'🍋',desc:'2× click',cost:50,mult:2,type:'click'},
   {id:'u2',name:'Lemon Polish',icon:'✨',desc:'3× click',cost:200,mult:3,type:'click'},
   {id:'u3',name:'Bulk Squeezing',icon:'💪',desc:'5× click',cost:1000,mult:5,type:'click'},
@@ -272,7 +248,7 @@ const UPGRADES = [
   {id:'u9',name:'Premium Recipe',icon:'📋',desc:'8× business',cost:150000,mult:8,type:'biz'},
   {id:'u10',name:'Robot Arms',icon:'🤖',desc:'20× business',cost:2000000,mult:20,type:'biz'},
 ];
-const BUILDINGS = [
+const BUILDINGS=[
   {id:'b1',name:'Lemon Stand',icon:'🏪',desc:'Basic street stand',base:0.5,baseCost:15,scale:1.15},
   {id:'b2',name:'Juice Bar',icon:'🥤',desc:'Fresh lemonade',base:3,baseCost:100,scale:1.15},
   {id:'b3',name:'Lemon Farm',icon:'🌾',desc:'Grow your own',base:20,baseCost:1100,scale:1.15},
@@ -282,7 +258,7 @@ const BUILDINGS = [
   {id:'b7',name:'Lemon Portal',icon:'🌀',desc:'Interdimensional',base:10000,baseCost:20000000,scale:1.15},
   {id:'b8',name:'Lemon Planet',icon:'🪐',desc:'A whole planet',base:50000,baseCost:300000000,scale:1.15},
 ];
-const MILESTONES = [
+const MILESTONES=[
   {val:1,msg:'First lemon sold! 🍋'},
   {val:100,msg:'100 lemons! Rolling!'},
   {val:1000,msg:'1,000 lemons! Legend!'},
@@ -291,303 +267,146 @@ const MILESTONES = [
   {val:1000000,msg:'1 MILLION lemons! 🌟'},
 ];
 
-let G = {money:0,totalEarned:0,clicks:0,clickMult:1,bizMult:1,prestige:0,prestigeMult:1,upgrades:{},buildings:{}};
-let seenMilestones = new Set();
-let firebaseReady = false;
-let fbAuth = null, fbDb = null, currentUser = null;
-let authMode = 'signin';
-let cloudSaveTimer = null;
+let G={money:0,totalEarned:0,clicks:0,clickMult:1,bizMult:1,prestige:0,prestigeMult:1,upgrades:{},buildings:{}};
+let seenMilestones=new Set();
+let firebaseReady=false,fbAuth=null,fbDb=null,currentUser=null,authMode='signin';
+
+/* ── ROBUST CONFIG PARSER ── */
+function parseFirebaseConfig(raw) {
+  // Extract all key:value pairs using regex — works on any format
+  const fields = ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId','measurementId','databaseId'];
+  const result = {};
+  for(const field of fields) {
+    // Match   field: "value"  or  field: 'value'  anywhere in the string
+    const re = new RegExp(field + '\\s*[=:]\\s*["\']([^"\']+)["\']');
+    const m = raw.match(re);
+    if(m) result[field] = m[1];
+  }
+  if(!result.apiKey || !result.projectId) return null;
+  return result;
+}
 
 /* ── SAVE / LOAD ── */
-function serialize() {
-  return {money:G.money,totalEarned:G.totalEarned,clicks:G.clicks,clickMult:G.clickMult,bizMult:G.bizMult,prestige:G.prestige,prestigeMult:G.prestigeMult,upgrades:G.upgrades,buildings:G.buildings};
-}
-function deserialize(d) {
-  if(!d) return;
-  Object.assign(G, {
-    money: d.money||0, totalEarned: d.totalEarned||0, clicks: d.clicks||0,
-    clickMult: d.clickMult||1, bizMult: d.bizMult||1,
-    prestige: d.prestige||0, prestigeMult: d.prestigeMult||1,
-    upgrades: d.upgrades||{}, buildings: d.buildings||{}
-  });
-}
-function localSave() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(serialize())); } catch(e){}
-  document.getElementById('save-bar').textContent = '💾 Saved locally ' + new Date().toLocaleTimeString();
-}
-function localLoad() {
-  try { const s = localStorage.getItem(LS_KEY); if(s) deserialize(JSON.parse(s)); } catch(e){}
-}
-async function cloudSave() {
-  if(!firebaseReady||!currentUser||!fbDb) return;
-  try {
-    await fbDb.collection('saves').doc(currentUser.uid).set(serialize());
-    document.getElementById('save-bar').textContent = '☁️ Cloud saved ' + new Date().toLocaleTimeString();
-  } catch(e){ console.warn('Cloud save failed',e); }
-}
-async function cloudLoad() {
-  if(!firebaseReady||!currentUser||!fbDb) return;
-  try {
-    const doc = await fbDb.collection('saves').doc(currentUser.uid).get();
-    if(doc.exists) { deserialize(doc.data()); renderMoney(); renderShop(); showToast('☁️ Cloud save loaded!'); }
-    else { cloudSave(); }
-  } catch(e){ console.warn('Cloud load failed',e); }
-}
-function scheduledSave() {
-  localSave();
-  if(currentUser) cloudSave();
-}
+function serialize(){return{money:G.money,totalEarned:G.totalEarned,clicks:G.clicks,clickMult:G.clickMult,bizMult:G.bizMult,prestige:G.prestige,prestigeMult:G.prestigeMult,upgrades:G.upgrades,buildings:G.buildings};}
+function deserialize(d){if(!d)return;Object.assign(G,{money:d.money||0,totalEarned:d.totalEarned||0,clicks:d.clicks||0,clickMult:d.clickMult||1,bizMult:d.bizMult||1,prestige:d.prestige||0,prestigeMult:d.prestigeMult||1,upgrades:d.upgrades||{},buildings:d.buildings||{}});}
+function localSave(){try{localStorage.setItem(LS_KEY,JSON.stringify(serialize()));}catch(e){}document.getElementById('save-bar').textContent='💾 Saved locally '+new Date().toLocaleTimeString();}
+function localLoad(){try{const s=localStorage.getItem(LS_KEY);if(s)deserialize(JSON.parse(s));}catch(e){}}
+async function cloudSave(){if(!firebaseReady||!currentUser||!fbDb)return;try{await fbDb.collection('saves').doc(currentUser.uid).set(serialize());document.getElementById('save-bar').textContent='☁️ Cloud saved '+new Date().toLocaleTimeString();}catch(e){console.warn('Cloud save failed',e);}}
+async function cloudLoad(){if(!firebaseReady||!currentUser||!fbDb)return;try{const doc=await fbDb.collection('saves').doc(currentUser.uid).get();if(doc.exists){deserialize(doc.data());renderMoney();renderShop();showToast('☁️ Cloud save loaded!');}else{cloudSave();}}catch(e){console.warn('Cloud load failed',e);}}
+function scheduledSave(){localSave();if(currentUser)cloudSave();}
 
 /* ── FIREBASE INIT ── */
-function initFirebase(config) {
-  try {
-    if(firebase.apps.length) firebase.apps.forEach(a=>a.delete());
+function initFirebase(config){
+  try{
+    if(firebase.apps.length)firebase.apps.forEach(a=>{try{a.delete();}catch(e){}});
     firebase.initializeApp(config);
-    fbAuth = firebase.auth();
-    fbDb = firebase.firestore();
-    firebaseReady = true;
-    localStorage.setItem(LS_CFG, JSON.stringify(config));
-
-    fbAuth.onAuthStateChanged(user => {
-      currentUser = user;
-      if(user) {
-        document.getElementById('auth-btn').textContent = '👤 Sign Out';
-        document.getElementById('auth-status').textContent = '☁️ ' + (user.email||'').split('@')[0];
+    fbAuth=firebase.auth();
+    fbDb=firebase.firestore();
+    firebaseReady=true;
+    try{localStorage.setItem(LS_CFG,JSON.stringify(config));}catch(e){}
+    fbAuth.onAuthStateChanged(user=>{
+      currentUser=user;
+      if(user){
+        document.getElementById('auth-btn').textContent='👤 Sign Out';
+        document.getElementById('auth-status').textContent='☁️ '+(user.email||'').split('@')[0];
         cloudLoad();
-      } else {
-        document.getElementById('auth-btn').textContent = '👤 Sign In';
-        document.getElementById('auth-status').textContent = 'Signed out — local save';
+      }else{
+        document.getElementById('auth-btn').textContent='👤 Sign In';
+        document.getElementById('auth-status').textContent='Signed out — local save';
       }
     });
     return true;
-  } catch(e) { console.error('Firebase init error',e); return false; }
+  }catch(e){console.error('Firebase init error',e);return false;}
 }
 
-/* ── FIREBASE SETUP SCREEN ── */
-document.getElementById('apply-config-btn').addEventListener('click', () => {
-  const raw = document.getElementById('firebase-config-input').value.trim();
-  let config;
-  try {
-    // Accept both JS object and JSON
-    const cleaned = raw.replace(/(\w+):/g, '"$1":').replace(/'/g,'"');
-    config = JSON.parse(cleaned);
-  } catch(e) {
-    alert('Could not parse config. Make sure you paste the full config object.');
+/* ── SETUP SCREEN ── */
+document.getElementById('apply-config-btn').addEventListener('click',()=>{
+  const raw=document.getElementById('firebase-config-input').value;
+  const errEl=document.getElementById('cfg-err');
+  errEl.textContent='';
+  const config=parseFirebaseConfig(raw);
+  if(!config){
+    errEl.textContent='Could not find apiKey or projectId. Make sure you paste the full config from Firebase Console.';
     return;
   }
-  if(!config.apiKey || !config.projectId) {
-    alert('Config looks incomplete — make sure apiKey and projectId are present.');
-    return;
-  }
-  if(initFirebase(config)) {
-    document.getElementById('setup-notice').style.display = 'none';
+  if(initFirebase(config)){
+    document.getElementById('setup-notice').style.display='none';
     showToast('🔥 Firebase connected!');
-  } else {
-    alert('Firebase failed to init. Double-check your config.');
+  }else{
+    errEl.textContent='Firebase failed to connect. Check your config and try again.';
   }
 });
-document.getElementById('skip-firebase-btn').addEventListener('click', () => {
-  document.getElementById('setup-notice').style.display = 'none';
-  showToast('Playing without accounts — local save only');
+document.getElementById('skip-firebase-btn').addEventListener('click',()=>{
+  document.getElementById('setup-notice').style.display='none';
+  showToast('Playing locally — no cloud saves');
 });
 
-/* ── AUTH MODAL ── */
-function openAuthModal() {
-  if(currentUser) { fbAuth.signOut(); return; }
-  document.getElementById('auth-modal').classList.add('show');
-  authMode = 'signin';
-  updateAuthUI();
-}
-function updateAuthUI() {
-  document.getElementById('auth-title').textContent = authMode==='signin'?'🍋 Sign In':'🍋 Register';
-  document.getElementById('auth-desc').textContent = authMode==='signin'?'Load your cloud save!':'Create your lemon account!';
-  document.getElementById('auth-submit').textContent = authMode==='signin'?'Sign In':'Create Account';
-  document.getElementById('auth-toggle').textContent = authMode==='signin'?'No account? Register':'Have an account? Sign In';
-  document.getElementById('auth-err').textContent = '';
-}
-document.getElementById('auth-toggle').addEventListener('click', () => {
-  authMode = authMode==='signin'?'register':'signin';
-  updateAuthUI();
-});
-document.getElementById('auth-close').addEventListener('click', () => document.getElementById('auth-modal').classList.remove('show'));
-document.getElementById('auth-btn').addEventListener('click', openAuthModal);
-document.getElementById('auth-submit').addEventListener('click', async () => {
-  if(!firebaseReady){ showToast('Firebase not set up!'); return; }
-  const email = document.getElementById('auth-email').value.trim();
-  const pass = document.getElementById('auth-pass').value;
-  const errEl = document.getElementById('auth-err');
-  errEl.textContent = '';
-  if(!email||!pass){ errEl.textContent='Enter email and password.'; return; }
-  try {
-    if(authMode==='signin') await fbAuth.signInWithEmailAndPassword(email, pass);
-    else await fbAuth.createUserWithEmailAndPassword(email, pass);
+/* ── AUTH ── */
+function openAuthModal(){if(currentUser){fbAuth.signOut();return;}document.getElementById('auth-modal').classList.add('show');authMode='signin';updateAuthUI();}
+function updateAuthUI(){document.getElementById('auth-title').textContent=authMode==='signin'?'🍋 Sign In':'🍋 Register';document.getElementById('auth-desc').textContent=authMode==='signin'?'Load your cloud save!':'Create your lemon account!';document.getElementById('auth-submit').textContent=authMode==='signin'?'Sign In':'Create Account';document.getElementById('auth-toggle').textContent=authMode==='signin'?'No account? Register':'Have an account? Sign In';document.getElementById('auth-err').textContent='';}
+document.getElementById('auth-toggle').addEventListener('click',()=>{authMode=authMode==='signin'?'register':'signin';updateAuthUI();});
+document.getElementById('auth-close').addEventListener('click',()=>document.getElementById('auth-modal').classList.remove('show'));
+document.getElementById('auth-btn').addEventListener('click',openAuthModal);
+document.getElementById('auth-submit').addEventListener('click',async()=>{
+  if(!firebaseReady){showToast('Firebase not connected!');return;}
+  const email=document.getElementById('auth-email').value.trim();
+  const pass=document.getElementById('auth-pass').value;
+  const errEl=document.getElementById('auth-err');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Enter email and password.';return;}
+  try{
+    if(authMode==='signin')await fbAuth.signInWithEmailAndPassword(email,pass);
+    else await fbAuth.createUserWithEmailAndPassword(email,pass);
     document.getElementById('auth-modal').classList.remove('show');
     showToast(authMode==='signin'?'Welcome back! ☁️':'Account created! 🍋');
-  } catch(e) {
-    const msgs = {
-      'auth/user-not-found':'No account with that email.',
-      'auth/wrong-password':'Wrong password.',
-      'auth/email-already-in-use':'Email already registered.',
-      'auth/weak-password':'Password must be 6+ characters.',
-      'auth/invalid-email':'Invalid email address.',
-    };
-    errEl.textContent = msgs[e.code]||e.message;
+  }catch(e){
+    const msgs={'auth/user-not-found':'No account with that email.','auth/wrong-password':'Wrong password.','auth/email-already-in-use':'Email already registered.','auth/weak-password':'Password needs 6+ characters.','auth/invalid-email':'Invalid email address.','auth/invalid-credential':'Wrong email or password.'};
+    errEl.textContent=msgs[e.code]||e.message;
   }
 });
 
 /* ── THEME ── */
-function applyTheme(t) {
-  document.body.setAttribute('data-theme', t);
-  document.getElementById('theme-btn').textContent = t==='dark'?'☀️ Light':'🌙 Dark';
-  try{ localStorage.setItem(LS_THEME, t); }catch(e){}
-}
-document.getElementById('theme-btn').addEventListener('click', () => {
-  applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark');
-});
+function applyTheme(t){document.body.setAttribute('data-theme',t);document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Light':'🌙 Dark';try{localStorage.setItem(LS_THEME,t);}catch(e){}}
+document.getElementById('theme-btn').addEventListener('click',()=>applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark'));
 
 /* ── TABS ── */
-document.querySelectorAll('.tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('visible'));
-    document.getElementById('tab-'+btn.dataset.tab).classList.add('visible');
-  });
-});
+document.querySelectorAll('.tab').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('visible'));document.getElementById('tab-'+btn.dataset.tab).classList.add('visible');});});
 
 /* ── GAME LOGIC ── */
-function fmt(n) {
-  if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
-  if(n>=1e9)  return '$'+(n/1e9).toFixed(2)+'B';
-  if(n>=1e6)  return '$'+(n/1e6).toFixed(2)+'M';
-  if(n>=1e3)  return '$'+(n/1e3).toFixed(1)+'K';
-  return '$'+Math.floor(n).toLocaleString();
-}
-function clickVal()  { return 1 * G.clickMult * G.prestigeMult; }
-function ips() {
-  let t=0;
-  BUILDINGS.forEach(b=>{ const c=G.buildings[b.id]||0; if(c>0) t+=b.base*c*G.bizMult*G.prestigeMult; });
-  return t;
-}
-function bCost(b) { return Math.floor(b.baseCost * Math.pow(b.scale, G.buildings[b.id]||0)); }
-
-function checkMilestones() {
-  MILESTONES.forEach(m=>{ if(!seenMilestones.has(m.val)&&G.clicks>=m.val){ seenMilestones.add(m.val); showMilestone(m.msg); } });
-}
+function fmt(n){if(n>=1e12)return'$'+(n/1e12).toFixed(2)+'T';if(n>=1e9)return'$'+(n/1e9).toFixed(2)+'B';if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return'$'+(n/1e3).toFixed(1)+'K';return'$'+Math.floor(n).toLocaleString();}
+function clickVal(){return 1*G.clickMult*G.prestigeMult;}
+function ips(){let t=0;BUILDINGS.forEach(b=>{const c=G.buildings[b.id]||0;if(c>0)t+=b.base*c*G.bizMult*G.prestigeMult;});return t;}
+function bCost(b){return Math.floor(b.baseCost*Math.pow(b.scale,G.buildings[b.id]||0));}
+function checkMilestones(){MILESTONES.forEach(m=>{if(!seenMilestones.has(m.val)&&G.clicks>=m.val){seenMilestones.add(m.val);showMilestone(m.msg);}});}
 let mTimer=null;
-function showMilestone(msg) {
-  const el=document.getElementById('milestone-banner');
-  el.textContent=msg; el.style.opacity='1';
-  if(mTimer) clearTimeout(mTimer);
-  mTimer=setTimeout(()=>el.style.opacity='0',2800);
-}
+function showMilestone(msg){const el=document.getElementById('milestone-banner');el.textContent=msg;el.style.opacity='1';if(mTimer)clearTimeout(mTimer);mTimer=setTimeout(()=>el.style.opacity='0',2800);}
 let tTimer=null;
-function showToast(msg) {
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.style.opacity='1';
-  if(tTimer) clearTimeout(tTimer);
-  tTimer=setTimeout(()=>el.style.opacity='0',2000);
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.style.opacity='1';if(tTimer)clearTimeout(tTimer);tTimer=setTimeout(()=>el.style.opacity='0',2000);}
+function renderMoney(){const am=document.getElementById('money-amount');am.textContent=fmt(G.money);am.classList.remove('pop');void am.offsetWidth;am.classList.add('pop');document.getElementById('money-per-sec').textContent=fmt(ips())+' / sec';document.getElementById('click-value').textContent='+'+fmt(clickVal())+' per click';document.getElementById('stat-clicks').textContent=G.clicks.toLocaleString();document.getElementById('stat-total').textContent=fmt(G.totalEarned);document.getElementById('stat-prestige').textContent=G.prestige;const ready=G.totalEarned>=1000000;document.getElementById('prestige-btn').className=ready?'ready':'';document.getElementById('prestige-info').textContent=ready?'Ready! +×1.5 forever 🌟':'Need '+fmt(Math.max(0,1000000-G.totalEarned))+' more';}
+function renderShop(){
+  const ul=document.getElementById('tab-upgrades');ul.innerHTML='';
+  UPGRADES.forEach(u=>{const owned=G.upgrades[u.id];const can=G.money>=u.cost;const d=document.createElement('div');d.className='shop-item'+(owned?' locked':(can?' affordable':''));d.innerHTML=`<div class="item-icon">${u.icon}</div><div class="item-info"><div class="item-name">${u.name}</div><div class="item-desc">${u.desc}</div></div><div class="item-right">${owned?'<span class="item-owned">✓</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;if(!owned)d.onclick=()=>buyUpgrade(u);ul.appendChild(d);});
+  const bl=document.getElementById('tab-buildings');bl.innerHTML='';
+  BUILDINGS.forEach(b=>{const cnt=G.buildings[b.id]||0;const cost=bCost(b);const can=G.money>=cost;const income=cnt>0?fmt(b.base*cnt*G.bizMult*G.prestigeMult)+'/s':b.desc;const d=document.createElement('div');d.className='shop-item'+(can?' affordable':'');d.innerHTML=`<div class="item-icon">${b.icon}</div><div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${income}</div></div><div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'×'+cnt:''}</div></div>`;d.onclick=()=>buyBuilding(b);bl.appendChild(d);});
 }
-
-function renderMoney() {
-  const am=document.getElementById('money-amount');
-  am.textContent=fmt(G.money);
-  am.classList.remove('pop'); void am.offsetWidth; am.classList.add('pop');
-  document.getElementById('money-per-sec').textContent=fmt(ips())+' / sec';
-  document.getElementById('click-value').textContent='+'+fmt(clickVal())+' per click';
-  document.getElementById('stat-clicks').textContent=G.clicks.toLocaleString();
-  document.getElementById('stat-total').textContent=fmt(G.totalEarned);
-  document.getElementById('stat-prestige').textContent=G.prestige;
-  const ready=G.totalEarned>=1000000;
-  document.getElementById('prestige-btn').className=ready?'ready':'';
-  document.getElementById('prestige-info').textContent=ready?'Ready! +×1.5 forever 🌟':'Need '+fmt(Math.max(0,1000000-G.totalEarned))+' more';
-}
-function renderShop() {
-  const ul=document.getElementById('tab-upgrades'); ul.innerHTML='';
-  UPGRADES.forEach(u=>{
-    const owned=G.upgrades[u.id]; const can=G.money>=u.cost;
-    const d=document.createElement('div');
-    d.className='shop-item'+(owned?' locked':(can?' affordable':''));
-    d.innerHTML=`<div class="item-icon">${u.icon}</div><div class="item-info"><div class="item-name">${u.name}</div><div class="item-desc">${u.desc}</div></div><div class="item-right">${owned?'<span class="item-owned">✓</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;
-    if(!owned) d.onclick=()=>buyUpgrade(u);
-    ul.appendChild(d);
-  });
-  const bl=document.getElementById('tab-buildings'); bl.innerHTML='';
-  BUILDINGS.forEach(b=>{
-    const cnt=G.buildings[b.id]||0; const cost=bCost(b); const can=G.money>=cost;
-    const income=cnt>0?fmt(b.base*cnt*G.bizMult*G.prestigeMult)+'/s':b.desc;
-    const d=document.createElement('div');
-    d.className='shop-item'+(can?' affordable':'');
-    d.innerHTML=`<div class="item-icon">${b.icon}</div><div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${income}</div></div><div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'×'+cnt:''}</div></div>`;
-    d.onclick=()=>buyBuilding(b);
-    bl.appendChild(d);
-  });
-}
-function buyUpgrade(u) {
-  if(G.upgrades[u.id]||G.money<u.cost) return;
-  G.money-=u.cost; G.upgrades[u.id]=true;
-  if(u.type==='click') G.clickMult*=u.mult; else G.bizMult*=u.mult;
-  showToast('✨ '+u.name+' unlocked!');
-  renderShop(); renderMoney();
-}
-function buyBuilding(b) {
-  const cost=bCost(b);
-  if(G.money<cost){ showToast('Not enough!'); return; }
-  G.money-=cost; G.buildings[b.id]=(G.buildings[b.id]||0)+1;
-  renderShop(); renderMoney();
-}
-function doPrestige() {
-  G.prestige++; G.prestigeMult=Math.pow(1.5,G.prestige);
-  G.money=0; G.clicks=0; G.totalEarned=0; G.clickMult=1; G.bizMult=1; G.upgrades={}; G.buildings={};
-  seenMilestones=new Set();
-  scheduledSave(); renderShop(); renderMoney();
-  showMilestone('🌟 Prestiged! ×'+G.prestigeMult.toFixed(1)+' active!');
-}
-
-document.getElementById('prestige-btn').addEventListener('click',()=>{ if(G.totalEarned<1000000) return; document.getElementById('prestige-modal').classList.add('show'); });
+function buyUpgrade(u){if(G.upgrades[u.id]||G.money<u.cost)return;G.money-=u.cost;G.upgrades[u.id]=true;if(u.type==='click')G.clickMult*=u.mult;else G.bizMult*=u.mult;showToast('✨ '+u.name+' unlocked!');renderShop();renderMoney();}
+function buyBuilding(b){const cost=bCost(b);if(G.money<cost){showToast('Not enough!');return;}G.money-=cost;G.buildings[b.id]=(G.buildings[b.id]||0)+1;renderShop();renderMoney();}
+function doPrestige(){G.prestige++;G.prestigeMult=Math.pow(1.5,G.prestige);G.money=0;G.clicks=0;G.totalEarned=0;G.clickMult=1;G.bizMult=1;G.upgrades={};G.buildings={};seenMilestones=new Set();scheduledSave();renderShop();renderMoney();showMilestone('🌟 Prestiged! ×'+G.prestigeMult.toFixed(1)+' active!');}
+document.getElementById('prestige-btn').addEventListener('click',()=>{if(G.totalEarned<1000000)return;document.getElementById('prestige-modal').classList.add('show');});
 document.getElementById('cancel-prestige').addEventListener('click',()=>document.getElementById('prestige-modal').classList.remove('show'));
-document.getElementById('confirm-prestige').addEventListener('click',()=>{ document.getElementById('prestige-modal').classList.remove('show'); doPrestige(); });
+document.getElementById('confirm-prestige').addEventListener('click',()=>{document.getElementById('prestige-modal').classList.remove('show');doPrestige();});
 
 /* ── PARTICLES / FLOATS ── */
-function spawnParticles(x,y) {
-  for(let i=0;i<6;i++){
-    const el=document.createElement('div'); el.className='particle';
-    const a=(i/6)*Math.PI*2; const dist=28+Math.random()*28;
-    el.style.cssText=`left:${x}px;top:${y}px;width:${4+Math.random()*5}px;height:${4+Math.random()*5}px;background:${PCOLS[Math.floor(Math.random()*PCOLS.length)]};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;animation-duration:${.5+Math.random()*.3}s`;
-    document.body.appendChild(el); setTimeout(()=>el.remove(),900);
-  }
-}
+function spawnParticles(x,y){for(let i=0;i<6;i++){const el=document.createElement('div');el.className='particle';const a=(i/6)*Math.PI*2;const dist=28+Math.random()*28;el.style.cssText=`left:${x}px;top:${y}px;width:${4+Math.random()*5}px;height:${4+Math.random()*5}px;background:${PCOLS[Math.floor(Math.random()*PCOLS.length)]};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;animation-duration:${.5+Math.random()*.3}s`;document.body.appendChild(el);setTimeout(()=>el.remove(),900);}}
 let floatThrottle=0;
-function spawnFloat(x,y,val) {
-  const now=Date.now(); if(now-floatThrottle<100) return; floatThrottle=now;
-  const el=document.createElement('div'); el.className='float-num';
-  el.textContent='+'+fmt(val); el.style.left=(x-20)+'px'; el.style.top=(y-10)+'px';
-  document.body.appendChild(el); setTimeout(()=>el.remove(),900);
-}
+function spawnFloat(x,y,val){const now=Date.now();if(now-floatThrottle<100)return;floatThrottle=now;const el=document.createElement('div');el.className='float-num';el.textContent='+'+fmt(val);el.style.left=(x-20)+'px';el.style.top=(y-10)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),900);}
 
 /* ── CLICK / HOLD ── */
-const lbtn=document.getElementById('lemon-btn'), ring=document.getElementById('lemon-ring'), hint=document.getElementById('hold-hint');
-let isHolding=false, holdInterval=null, holdTimer=null, lastPos={x:0,y:0};
-function doClick(x,y) {
-  const val=clickVal(); G.money+=val; G.totalEarned+=val; G.clicks++;
-  checkMilestones(); spawnFloat(x||lastPos.x,y||lastPos.y,val); spawnParticles(x||lastPos.x,y||lastPos.y);
-  renderMoney(); if(G.clicks%15===0) renderShop();
-}
-function startHold(x,y) {
-  if(isHolding) return; isHolding=true; lastPos={x,y};
-  lbtn.classList.add('pressed'); doClick(x,y);
-  holdTimer=setTimeout(()=>{
-    lbtn.classList.remove('pressed'); lbtn.classList.add('holding');
-    ring.classList.add('active'); hint.classList.add('active'); hint.textContent='Auto-clicking! 🍋🍋🍋';
-    holdInterval=setInterval(()=>doClick(lastPos.x,lastPos.y),125);
-  },400);
-}
-function endHold() {
-  if(!isHolding) return; isHolding=false;
-  clearTimeout(holdTimer); clearInterval(holdInterval); holdInterval=null;
-  lbtn.classList.remove('pressed','holding'); ring.classList.remove('active');
-  hint.classList.remove('active'); hint.textContent='Hold to auto-click 🍋';
-}
+const lbtn=document.getElementById('lemon-btn'),ring=document.getElementById('lemon-ring'),hint=document.getElementById('hold-hint');
+let isHolding=false,holdInterval=null,holdTimer=null,lastPos={x:0,y:0};
+function doClick(x,y){const val=clickVal();G.money+=val;G.totalEarned+=val;G.clicks++;checkMilestones();spawnFloat(x||lastPos.x,y||lastPos.y,val);spawnParticles(x||lastPos.x,y||lastPos.y);renderMoney();if(G.clicks%15===0)renderShop();}
+function startHold(x,y){if(isHolding)return;isHolding=true;lastPos={x,y};lbtn.classList.add('pressed');doClick(x,y);holdTimer=setTimeout(()=>{lbtn.classList.remove('pressed');lbtn.classList.add('holding');ring.classList.add('active');hint.classList.add('active');hint.textContent='Auto-clicking! 🍋🍋🍋';holdInterval=setInterval(()=>doClick(lastPos.x,lastPos.y),125);},400);}
+function endHold(){if(!isHolding)return;isHolding=false;clearTimeout(holdTimer);clearInterval(holdInterval);holdInterval=null;lbtn.classList.remove('pressed','holding');ring.classList.remove('active');hint.classList.remove('active');hint.textContent='Hold to auto-click 🍋';}
 lbtn.addEventListener('mousedown',e=>{e.preventDefault();startHold(e.clientX,e.clientY);});
 document.addEventListener('mouseup',()=>{if(isHolding)endHold();});
 lbtn.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];startHold(t.clientX,t.clientY);},{passive:false});
@@ -597,36 +416,24 @@ lbtn.addEventListener('mousemove',e=>{lastPos={x:e.clientX,y:e.clientY};});
 
 /* ── GAME LOOP ── */
 let lastTick=Date.now();
-function tick() {
-  const now=Date.now(); const dt=(now-lastTick)/1000; lastTick=now;
-  const income=ips()*dt;
-  if(income>0){ G.money+=income; G.totalEarned+=income; checkMilestones(); renderMoney(); }
-  if(Math.random()<0.04) renderShop();
-  requestAnimationFrame(tick);
-}
+function tick(){const now=Date.now();const dt=(now-lastTick)/1000;lastTick=now;const income=ips()*dt;if(income>0){G.money+=income;G.totalEarned+=income;checkMilestones();renderMoney();}if(Math.random()<0.04)renderShop();requestAnimationFrame(tick);}
 
 /* ── INIT ── */
 (function init(){
-  // Load theme
-  const savedTheme = localStorage.getItem(LS_THEME)||'dark';
-  applyTheme(savedTheme);
-  // Load local save first (always)
+  try{applyTheme(localStorage.getItem(LS_THEME)||'dark');}catch(e){}
   localLoad();
-  renderMoney(); renderShop();
-  // Try to restore firebase config
-  try {
-    const cfg = localStorage.getItem(LS_CFG);
-    if(cfg) {
-      const parsed = JSON.parse(cfg);
-      if(parsed.apiKey) {
-        if(initFirebase(parsed)) {
-          document.getElementById('setup-notice').style.display='none';
-        }
+  renderMoney();renderShop();
+  // Try restoring saved Firebase config
+  try{
+    const cfg=localStorage.getItem(LS_CFG);
+    if(cfg){
+      const parsed=JSON.parse(cfg);
+      if(parsed&&parsed.apiKey&&initFirebase(parsed)){
+        document.getElementById('setup-notice').style.display='none';
       }
     }
-  } catch(e){}
-  // Auto-save every 15s
-  setInterval(scheduledSave, 15000);
+  }catch(e){}
+  setInterval(scheduledSave,15000);
   tick();
 })();
 </script>
