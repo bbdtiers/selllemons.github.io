@@ -3,464 +3,684 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sell Lemons</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --lemon:#FFD700;--lemon-dark:#E6A800;--lemon-deep:#CC8800;
-    --green:#4CAF50;--green-dark:#388E3C;
-    --sky:#FFF9E6;--card:#FFFEF5;
-    --text:#2C1810;--text2:#7A5C3A;--text3:#B8956A;
-    --shadow:rgba(180,120,0,0.18);
-    --coin:#FFB300;
-  }
-  body{font-family:'Nunito',sans-serif;background:linear-gradient(160deg,#FFFDE7 0%,#FFF3CD 50%,#FFFDE7 100%);min-height:100vh;color:var(--text);overflow-x:hidden}
-  #game{display:grid;grid-template-columns:1fr 280px;min-height:100vh;max-width:900px;margin:0 auto;gap:0}
+*{box-sizing:border-box;margin:0;padding:0}
 
-  #left{display:flex;flex-direction:column;align-items:center;padding:20px 10px;position:relative}
-  #header{text-align:center;margin-bottom:8px}
-  h1{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--lemon-deep);text-shadow:2px 2px 0 #fff,3px 3px 0 var(--lemon);letter-spacing:1px}
-  #tagline{font-size:0.8rem;color:var(--text2);font-weight:600;margin-top:-4px}
+:root{
+  --bg:#FFFDE7;--bg2:#FFF8DC;--bg3:#FFF3CD;
+  --panel:#FFFFF5;--panel2:#FFFEF0;
+  --border:#FFE082;--border2:#FFD740;
+  --text:#2C1810;--text2:#7A5C3A;--text3:#B8956A;
+  --lemon:#FFD700;--lemon-d:#E6A800;--lemon-dd:#CC8800;
+  --green:#3D9142;--green-d:#2A6B2F;--green-bg:#E8F5E9;
+  --coin:#E6A800;--coin-bg:#FFF8DC;
+  --red:#C0392B;--red-bg:#FDEDEC;
+  --shop-item-hover:#FFF8E1;--shop-item-buy:#F1F8E9;
+  --shadow:rgba(180,120,0,0.15);
+  --float-color:#2A6B2F;
+  --btn-prestige-bg:linear-gradient(135deg,#FF6B35,#FF8C42);
+  --btn-prestige-shadow:#CC4400;
+  --held-ring:#FFD700;
+}
+[data-theme="dark"]{
+  --bg:#1A1500;--bg2:#231C00;--bg3:#2C2200;
+  --panel:#1E1A00;--panel2:#231C00;
+  --border:#4A3800;--border2:#6B5200;
+  --text:#F5E6A0;--text2:#C8A84B;--text3:#7A6030;
+  --lemon:#FFD700;--lemon-d:#E6A800;--lemon-dd:#FFE040;
+  --green:#5CBF61;--green-d:#3A9140;--green-bg:#0A1E0B;
+  --coin:#FFB300;--coin-bg:#2C2200;
+  --red:#E74C3C;--red-bg:#2C0A08;
+  --shop-item-hover:#2C2200;--shop-item-buy:#0A1E0B;
+  --shadow:rgba(255,200,0,0.08);
+  --float-color:#A8E6AB;
+  --btn-prestige-bg:linear-gradient(135deg,#C0392B,#E74C3C);
+  --btn-prestige-shadow:#8B0000;
+  --held-ring:#FFD700;
+}
 
-  #money-display{background:var(--card);border:2px solid var(--lemon);border-radius:16px;padding:10px 24px;text-align:center;margin-bottom:8px;box-shadow:0 4px 0 var(--lemon-dark),0 6px 12px var(--shadow)}
-  #money-label{font-size:0.72rem;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
-  #money-amount{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--green-dark);line-height:1}
-  #money-per-sec{font-size:0.72rem;color:var(--text3);font-weight:600}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  height:600px;
+  overflow:hidden;
+  transition:background 0.3s,color 0.3s;
+}
 
-  #clicker-area{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:220px;height:240px;margin:8px 0}
-  #hold-hint{font-size:0.7rem;color:var(--text3);font-weight:700;margin-top:4px;transition:opacity 0.3s;letter-spacing:0.3px}
-  #hold-hint.active{color:var(--green-dark);opacity:1}
+#game{
+  display:grid;
+  grid-template-columns:1fr 260px;
+  height:600px;
+  overflow:hidden;
+}
 
-  #lemon-btn{
-    background:none;border:none;cursor:pointer;
-    width:180px;height:180px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    position:relative;z-index:2;
-    -webkit-tap-highlight-color:transparent;
-    outline:none;
-    user-select:none;
-    -webkit-user-select:none;
-  }
-  #lemon-svg{
-    filter:drop-shadow(0 8px 0 var(--lemon-dark)) drop-shadow(0 0 20px rgba(255,200,0,0.4));
-    transition:transform 0.08s ease, filter 0.08s ease;
-    transform-origin:center;
-  }
-  #lemon-btn.pressed #lemon-svg{
-    filter:drop-shadow(0 2px 0 var(--lemon-dark)) drop-shadow(0 0 30px rgba(255,220,0,0.7));
-    transform:scale(0.88) translateY(6px);
-  }
-  #lemon-btn.holding #lemon-svg{
-    animation:holdBounce 0.18s ease infinite alternate;
-  }
-  @keyframes holdBounce{
-    0%{transform:scale(0.90) translateY(4px)}
-    100%{transform:scale(0.94) translateY(2px)}
-  }
+/* ── LEFT ── */
+#left{
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px 8px 8px;
+  background:var(--bg);
+  overflow:hidden;
+  position:relative;
+}
 
-  #click-value{font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--green-dark);background:#fff;border:2px solid var(--green);border-radius:8px;padding:2px 10px;margin-bottom:6px;box-shadow:0 2px 0 var(--green-dark)}
+/* header row */
+#topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:0 4px;margin-bottom:6px;
+}
+h1{
+  font-family:'Fredoka One',cursive;
+  font-size:1.6rem;color:var(--lemon-dd);
+  text-shadow:1px 1px 0 rgba(255,255,255,0.15);
+  letter-spacing:0.5px;line-height:1;
+}
 
-  .float-num{position:fixed;pointer-events:none;font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--green-dark);text-shadow:1px 1px 0 #fff,2px 2px 0 rgba(0,0,0,0.1);animation:floatUp 1s ease-out forwards;z-index:9999}
-  @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-90px) scale(1.3)}}
+/* theme toggle */
+#theme-btn{
+  background:var(--panel);border:1.5px solid var(--border);
+  border-radius:20px;padding:4px 10px;cursor:pointer;
+  font-size:0.78rem;font-weight:700;color:var(--text2);
+  display:flex;align-items:center;gap:5px;
+  transition:background 0.2s,color 0.2s;white-space:nowrap;
+}
+#theme-btn:hover{background:var(--border);color:var(--text)}
 
-  #milestone-banner{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--lemon);border:3px solid var(--lemon-deep);border-radius:14px;padding:10px 24px;font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--lemon-deep);box-shadow:0 4px 20px rgba(180,120,0,0.35);z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;text-align:center;white-space:nowrap}
+/* money display */
+#money-display{
+  background:var(--panel);
+  border:2px solid var(--lemon);
+  border-radius:14px;
+  padding:8px 20px;
+  text-align:center;
+  width:100%;max-width:280px;
+  margin-bottom:6px;
+  box-shadow:0 3px 0 var(--lemon-d),0 5px 16px var(--shadow);
+  transition:background 0.3s,border-color 0.3s;
+}
+#money-label{font-size:0.65rem;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+#money-amount{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--green);line-height:1.1;transition:transform 0.1s}
+#money-amount.pop{animation:moneyPop 0.18s ease}
+@keyframes moneyPop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+#money-per-sec{font-size:0.68rem;color:var(--text3);font-weight:600}
 
-  #stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:4px}
-  .stat-pill{background:#fff;border:1.5px solid var(--lemon);border-radius:20px;padding:3px 10px;font-size:0.7rem;font-weight:700;color:var(--text2)}
-  .stat-pill span{color:var(--green-dark)}
+/* click label */
+#click-value{
+  font-family:'Fredoka One',cursive;font-size:0.82rem;
+  color:var(--green);
+  background:var(--green-bg);
+  border:1.5px solid var(--green-d);
+  border-radius:8px;padding:2px 10px;
+  margin-bottom:4px;
+  transition:background 0.3s;
+}
 
-  #right{background:#FFFEF0;border-left:2px solid #FFE082;overflow-y:auto;display:flex;flex-direction:column}
-  #shop-header{padding:14px 14px 6px;border-bottom:1.5px solid #FFE082}
-  #shop-header h2{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--lemon-deep)}
-  #shop-header p{font-size:0.72rem;color:var(--text3);margin-top:1px}
+/* lemon area */
+#clicker-area{
+  position:relative;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  width:200px;height:200px;
+  margin:0;
+}
 
-  #upgrades-section h3,#buildings-section h3{font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--text2);padding:8px 14px 2px;border-bottom:1px solid #FFE082;letter-spacing:0.5px}
+#lemon-btn{
+  background:none;border:none;cursor:pointer;
+  width:170px;height:170px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;
+  -webkit-tap-highlight-color:transparent;
+  outline:none;user-select:none;-webkit-user-select:none;
+}
 
-  .shop-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;transition:background 0.12s;border-bottom:1px solid #FFF3CD;position:relative}
-  .shop-item:hover{background:#FFF8DC}
-  .shop-item.affordable{background:#F0FFF0}
-  .shop-item.affordable:hover{background:#E0FFE0}
-  .shop-item.locked{opacity:0.45;cursor:not-allowed;filter:grayscale(0.5)}
-  .item-icon{font-size:1.6rem;width:34px;text-align:center;flex-shrink:0}
-  .item-info{flex:1;min-width:0}
-  .item-name{font-size:0.8rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .item-desc{font-size:0.68rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .item-right{text-align:right;flex-shrink:0}
-  .item-cost{font-family:'Fredoka One',cursive;font-size:0.88rem;color:var(--coin)}
-  .item-count{font-size:0.68rem;color:var(--text3)}
-  .item-owned{font-size:0.68rem;background:var(--green);color:#fff;border-radius:10px;padding:1px 6px;display:inline-block}
+/* ring glow when holding */
+#lemon-ring{
+  position:absolute;
+  width:170px;height:170px;
+  border-radius:50%;
+  border:3px solid transparent;
+  pointer-events:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  z-index:1;
+}
+#lemon-ring.active{
+  border-color:var(--held-ring);
+  box-shadow:0 0 18px 4px rgba(255,215,0,0.35);
+  animation:ringPulse 0.5s ease infinite alternate;
+}
+@keyframes ringPulse{0%{box-shadow:0 0 10px 2px rgba(255,215,0,0.25)}100%{box-shadow:0 0 24px 8px rgba(255,215,0,0.5)}}
 
-  #prestige-section{padding:10px 14px;border-top:1.5px solid #FFE082;margin-top:auto}
-  #prestige-btn{width:100%;background:linear-gradient(135deg,#FF6B35,#FF8C42);border:none;border-radius:10px;color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;padding:10px;cursor:pointer;box-shadow:0 3px 0 #CC4400;transition:transform 0.1s,box-shadow 0.1s;opacity:0.5}
-  #prestige-btn.ready{opacity:1}
-  #prestige-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #CC4400}
-  #prestige-info{font-size:0.68rem;color:var(--text3);margin-top:4px;text-align:center}
+#lemon-svg{
+  transition:transform 0.08s ease,filter 0.08s ease;
+  transform-origin:center;
+  filter:drop-shadow(0 6px 0 var(--lemon-d)) drop-shadow(0 0 14px rgba(255,200,0,0.3));
+}
+#lemon-btn.pressed #lemon-svg{transform:scale(0.87) translateY(5px);filter:drop-shadow(0 1px 0 var(--lemon-d)) drop-shadow(0 0 24px rgba(255,215,0,0.6))}
+#lemon-btn.holding #lemon-svg{animation:holdBounce 0.2s ease infinite alternate}
+@keyframes holdBounce{0%{transform:scale(0.90) translateY(4px)}100%{transform:scale(0.94) translateY(1px)}}
 
-  #save-bar{font-size:0.65rem;color:var(--text3);text-align:center;padding:4px;border-top:1px solid #FFE082}
+/* particles */
+.particle{
+  position:fixed;pointer-events:none;
+  border-radius:50%;
+  animation:particleBurst 0.7s ease-out forwards;
+  z-index:9998;
+}
+@keyframes particleBurst{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}
+}
+.float-num{
+  position:fixed;pointer-events:none;
+  font-family:'Fredoka One',cursive;font-size:1.3rem;
+  color:var(--float-color);
+  text-shadow:0 1px 3px rgba(0,0,0,0.2);
+  animation:floatUp 0.9s ease-out forwards;
+  z-index:9999;
+}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.2)}}
 
-  #prestige-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:none;align-items:center;justify-content:center}
-  #prestige-modal.show{display:flex}
-  #prestige-box{background:#FFFDE7;border:3px solid var(--lemon);border-radius:20px;padding:28px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
-  #prestige-box h2{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--lemon-deep);margin-bottom:8px}
-  #prestige-box p{font-size:0.85rem;color:var(--text2);margin-bottom:16px;line-height:1.5}
-  .modal-btns{display:flex;gap:10px}
-  .modal-btns button{flex:1;padding:10px;border-radius:10px;border:none;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer}
-  #confirm-prestige{background:linear-gradient(135deg,#FF6B35,#FF8C42);color:#fff;box-shadow:0 3px 0 #CC4400}
-  #cancel-prestige{background:#fff;color:var(--text2);border:2px solid #FFE082}
+#hold-hint{font-size:0.68rem;color:var(--text3);font-weight:700;margin-top:2px;transition:color 0.2s;letter-spacing:0.2px}
+#hold-hint.active{color:var(--lemon-dd)}
 
-  #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;border-radius:10px;padding:8px 18px;font-size:0.8rem;font-weight:600;opacity:0;transition:opacity 0.3s;z-index:9999;pointer-events:none;white-space:nowrap}
+/* stats pills */
+#stats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;width:100%}
+.stat-pill{
+  background:var(--panel);border:1.5px solid var(--border);
+  border-radius:20px;padding:2px 9px;
+  font-size:0.66rem;font-weight:700;color:var(--text2);
+  transition:background 0.3s;
+}
+.stat-pill span{color:var(--green)}
 
-  .cloud{position:fixed;opacity:0.06;font-size:4rem;pointer-events:none;animation:cloudDrift linear infinite}
-  @keyframes cloudDrift{0%{transform:translateX(-120px)}100%{transform:translateX(calc(100vw + 120px))}}
+/* ── RIGHT PANEL ── */
+#right{
+  background:var(--panel);
+  border-left:2px solid var(--border);
+  display:flex;flex-direction:column;
+  height:600px;
+  transition:background 0.3s,border-color 0.3s;
+}
 
-  #right::-webkit-scrollbar{width:4px}
-  #right::-webkit-scrollbar-track{background:#FFFEF0}
-  #right::-webkit-scrollbar-thumb{background:#FFE082;border-radius:4px}
+#shop-header{
+  padding:10px 12px 5px;
+  border-bottom:1.5px solid var(--border);
+  flex-shrink:0;
+}
+#shop-header h2{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--lemon-dd)}
+#shop-header p{font-size:0.66rem;color:var(--text3);margin-top:1px}
+
+/* TAB BAR */
+#tab-bar{
+  display:flex;border-bottom:1.5px solid var(--border);
+  flex-shrink:0;
+}
+.tab{
+  flex:1;padding:6px 4px;
+  font-family:'Fredoka One',cursive;font-size:0.78rem;
+  color:var(--text3);
+  background:none;border:none;cursor:pointer;
+  transition:color 0.2s,background 0.2s;
+  border-bottom:2px solid transparent;
+}
+.tab.active{color:var(--lemon-dd);border-bottom-color:var(--lemon);background:var(--panel2)}
+.tab:hover:not(.active){background:var(--shop-item-hover);color:var(--text2)}
+
+/* SHOP CONTENT */
+#shop-content{flex:1;overflow-y:auto;overflow-x:hidden}
+#shop-content::-webkit-scrollbar{width:3px}
+#shop-content::-webkit-scrollbar-track{background:transparent}
+#shop-content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+.shop-tab{display:none}
+.shop-tab.visible{display:block}
+
+.shop-item{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 10px;cursor:pointer;
+  transition:background 0.12s;
+  border-bottom:1px solid var(--border);
+}
+.shop-item:hover{background:var(--shop-item-hover)}
+.shop-item.affordable{background:var(--shop-item-buy)}
+.shop-item.affordable:hover{background:var(--shop-item-buy);filter:brightness(0.97)}
+.shop-item.locked{opacity:0.4;cursor:not-allowed}
+.item-icon{font-size:1.35rem;width:28px;text-align:center;flex-shrink:0}
+.item-info{flex:1;min-width:0}
+.item-name{font-size:0.74rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-desc{font-size:0.62rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-right{text-align:right;flex-shrink:0}
+.item-cost{font-family:'Fredoka One',cursive;font-size:0.82rem;color:var(--coin)}
+.item-count{font-size:0.6rem;color:var(--text3)}
+.item-owned{font-size:0.6rem;background:var(--green);color:#fff;border-radius:8px;padding:1px 5px;display:inline-block}
+
+/* PRESTIGE */
+#prestige-section{
+  padding:8px 12px;
+  border-top:1.5px solid var(--border);
+  flex-shrink:0;
+}
+#prestige-btn{
+  width:100%;
+  background:var(--btn-prestige-bg);
+  border:none;border-radius:10px;color:#fff;
+  font-family:'Fredoka One',cursive;font-size:0.9rem;
+  padding:8px;cursor:pointer;
+  box-shadow:0 3px 0 var(--btn-prestige-shadow);
+  transition:transform 0.1s,box-shadow 0.1s,opacity 0.2s;
+  opacity:0.45;
+}
+#prestige-btn.ready{opacity:1}
+#prestige-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btn-prestige-shadow)}
+#prestige-info{font-size:0.61rem;color:var(--text3);margin-top:3px;text-align:center}
+
+/* SAVE BAR */
+#save-bar{font-size:0.6rem;color:var(--text3);text-align:center;padding:3px;border-top:1px solid var(--border);flex-shrink:0}
+
+/* MILESTONE */
+#milestone-wrap{
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  z-index:500;pointer-events:none;width:max-content;max-width:96%;
+}
+#milestone-banner{
+  background:var(--lemon);border:2.5px solid var(--lemon-dd);
+  border-radius:12px;padding:7px 18px;
+  font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--lemon-dd);
+  box-shadow:0 4px 18px rgba(180,120,0,0.3);
+  opacity:0;transition:opacity 0.3s;text-align:center;
+}
+
+/* MODAL */
+#prestige-modal{
+  position:absolute;inset:0;background:rgba(0,0,0,0.55);
+  z-index:1000;display:none;align-items:center;justify-content:center;
+}
+#prestige-modal.show{display:flex}
+#prestige-box{
+  background:var(--panel);border:2.5px solid var(--lemon);
+  border-radius:18px;padding:24px;max-width:280px;width:90%;
+  text-align:center;box-shadow:0 16px 50px rgba(0,0,0,0.4);
+}
+#prestige-box h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--lemon-dd);margin-bottom:6px}
+#prestige-box p{font-size:0.78rem;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.modal-btns{display:flex;gap:8px}
+.modal-btns button{flex:1;padding:9px;border-radius:9px;border:none;font-family:'Fredoka One',cursive;font-size:0.9rem;cursor:pointer}
+#confirm-prestige{background:var(--btn-prestige-bg);color:#fff;box-shadow:0 2px 0 var(--btn-prestige-shadow)}
+#cancel-prestige{background:var(--panel2);color:var(--text2);border:1.5px solid var(--border)}
+
+/* TOAST */
+#toast{
+  position:absolute;bottom:50px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:var(--bg);
+  border-radius:9px;padding:6px 16px;
+  font-size:0.74rem;font-weight:700;
+  opacity:0;transition:opacity 0.3s;
+  z-index:900;pointer-events:none;white-space:nowrap;
+}
 </style>
 </head>
-<body>
-
-<div class="cloud" style="top:8%;animation-duration:45s;animation-delay:-10s">☁️</div>
-<div class="cloud" style="top:22%;font-size:2.5rem;animation-duration:60s;animation-delay:-28s">☁️</div>
-<div class="cloud" style="top:55%;animation-duration:50s;animation-delay:-5s">☁️</div>
+<body data-theme="light">
 
 <div id="game">
   <div id="left">
-    <div id="header">
+    <div id="milestone-wrap"><div id="milestone-banner"></div></div>
+
+    <div id="topbar">
       <h1>🍋 Sell Lemons</h1>
-      <div id="tagline">Click lemons. Make money. Live the dream.</div>
+      <button id="theme-btn">🌙 Dark</button>
     </div>
 
     <div id="money-display">
-      <div id="money-label">💰 Total Earnings</div>
+      <div id="money-label">💰 Total Money</div>
       <div id="money-amount">$0</div>
-      <div id="money-per-sec">$0.00 / sec</div>
+      <div id="money-per-sec">$0 / sec</div>
     </div>
 
     <div id="click-value">+$1 per click</div>
 
     <div id="clicker-area">
+      <div id="lemon-ring"></div>
       <button id="lemon-btn" aria-label="Click or hold to sell lemons">
-        <svg id="lemon-svg" width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="80" cy="80" rx="58" ry="48" fill="#FFD700" stroke="#E6A800" stroke-width="2"/>
-          <ellipse cx="80" cy="80" rx="58" ry="48" fill="url(#lemonShine)" opacity="0.5"/>
-          <ellipse cx="52" cy="58" rx="14" ry="9" fill="#FFE84D" opacity="0.55" transform="rotate(-20,52,58)"/>
-          <path d="M22 75 Q15 65 18 55" stroke="#E6A800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M22 75 Q10 78 12 88" stroke="#E6A800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M18 55 Q8 48 14 36" stroke="#4CAF50" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M14 36 Q10 26 20 22" stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <ellipse cx="138" cy="82" rx="12" ry="8" fill="#FFE84D" opacity="0.3" transform="rotate(10,138,82)"/>
-          <path d="M136 75 Q144 68 140 58" stroke="#E6A800" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M140 58 Q146 48 138 42" stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <svg id="lemon-svg" width="150" height="150" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="80" cy="82" rx="58" ry="48" fill="#FFD700" stroke="#E6A800" stroke-width="1.5"/>
+          <ellipse cx="80" cy="82" rx="58" ry="48" fill="url(#ls)" opacity="0.5"/>
+          <ellipse cx="52" cy="60" rx="14" ry="9" fill="#FFE84D" opacity="0.55" transform="rotate(-20,52,60)"/>
+          <path d="M22 77 Q15 67 18 57" stroke="#E6A800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M22 77 Q10 80 12 90" stroke="#E6A800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M18 57 Q8 50 14 38" stroke="#4CAF50" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M14 38 Q10 28 20 24" stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M136 77 Q144 70 140 60" stroke="#E6A800" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M140 60 Q146 50 138 44" stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round"/>
           <defs>
-            <radialGradient id="lemonShine" cx="35%" cy="35%" r="55%">
+            <radialGradient id="ls" cx="35%" cy="35%" r="55%">
               <stop offset="0%" stop-color="#fff" stop-opacity="0.6"/>
               <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
             </radialGradient>
           </defs>
         </svg>
       </button>
-      <div id="hold-hint">Hold to auto-click 🍋</div>
     </div>
+    <div id="hold-hint">Hold to auto-click 🍋</div>
 
-    <div id="stats">
-      <div class="stat-pill">Lemons sold: <span id="stat-clicks">0</span></div>
-      <div class="stat-pill">All-time: <span id="stat-total">$0</span></div>
-      <div class="stat-pill">Prestige: <span id="stat-prestige">0</span>x</div>
+    <div id="stats" style="margin-top:6px">
+      <div class="stat-pill">Sold: <span id="stat-clicks">0</span></div>
+      <div class="stat-pill">Earned: <span id="stat-total">$0</span></div>
+      <div class="stat-pill">Prestige: <span id="stat-prestige">0</span>×</div>
     </div>
   </div>
 
+  <!-- RIGHT PANEL -->
   <div id="right">
     <div id="shop-header">
       <h2>🛒 Shop</h2>
       <p>Expand your lemon empire!</p>
     </div>
-    <div id="upgrades-section">
-      <h3>⚡ Upgrades</h3>
-      <div id="upgrades-list"></div>
+    <div id="tab-bar">
+      <button class="tab active" data-tab="upgrades">⚡ Upgrades</button>
+      <button class="tab" data-tab="buildings">🏗 Businesses</button>
     </div>
-    <div id="buildings-section">
-      <h3>🏗️ Businesses</h3>
-      <div id="buildings-list"></div>
+    <div id="shop-content">
+      <div id="tab-upgrades" class="shop-tab visible"></div>
+      <div id="tab-buildings" class="shop-tab"></div>
     </div>
     <div id="prestige-section">
       <button id="prestige-btn">🌟 Prestige</button>
-      <div id="prestige-info">Reach $1M total to prestige (×1.5 all earnings)</div>
+      <div id="prestige-info">Reach $1M earned to prestige</div>
     </div>
     <div id="save-bar">💾 Auto-saves every 10s</div>
   </div>
 </div>
 
-<div id="milestone-banner">🎉 Milestone!</div>
 <div id="prestige-modal">
   <div id="prestige-box">
     <h2>🌟 Prestige!</h2>
-    <p>Reset your progress for a permanent <strong>×1.5 earnings multiplier</strong>. You've unlocked this by reaching $1,000,000! Ready to start fresh?</p>
+    <p>Reset everything for a permanent <strong>×1.5 earnings multiplier</strong>. Ready?</p>
     <div class="modal-btns">
       <button id="cancel-prestige">Not yet</button>
-      <button id="confirm-prestige">Let's go! 🍋</button>
+      <button id="confirm-prestige">Let's go!</button>
     </div>
   </div>
 </div>
 <div id="toast"></div>
 
 <script>
-const SAVE_KEY = 'sell_lemons_v4';
+const SAVE_KEY='sell_lemons_v5';
 
-const UPGRADES = [
-  {id:'u1',name:'Better Squeezer',icon:'🍋',desc:'2× click value',cost:50,mult:2,type:'click'},
-  {id:'u2',name:'Lemon Polish',icon:'✨',desc:'3× click value',cost:200,mult:3,type:'click'},
-  {id:'u3',name:'Bulk Squeezing',icon:'💪',desc:'5× click value',cost:1000,mult:5,type:'click'},
-  {id:'u4',name:'Lemon Press 3000',icon:'⚙️',desc:'10× click value',cost:8000,mult:10,type:'click'},
-  {id:'u5',name:'Golden Lemon',icon:'🌟',desc:'50× click value',cost:100000,mult:50,type:'click'},
-  {id:'u6',name:'Street Cart Wheels',icon:'🛒',desc:'2× all business income',cost:500,mult:2,type:'biz'},
-  {id:'u7',name:'Shade Umbrella',icon:'☂️',desc:'3× all business income',cost:3000,mult:3,type:'biz'},
-  {id:'u8',name:'Marketing Flyers',icon:'📄',desc:'5× all business income',cost:20000,mult:5,type:'biz'},
-  {id:'u9',name:'Premium Recipe',icon:'📋',desc:'8× all business income',cost:150000,mult:8,type:'biz'},
-  {id:'u10',name:'Robot Lemon Arms',icon:'🤖',desc:'20× all business income',cost:2000000,mult:20,type:'biz'},
+const UPGRADES=[
+  {id:'u1',name:'Better Squeezer',icon:'🍋',desc:'2× click',cost:50,mult:2,type:'click'},
+  {id:'u2',name:'Lemon Polish',icon:'✨',desc:'3× click',cost:200,mult:3,type:'click'},
+  {id:'u3',name:'Bulk Squeezing',icon:'💪',desc:'5× click',cost:1000,mult:5,type:'click'},
+  {id:'u4',name:'Lemon Press 3000',icon:'⚙️',desc:'10× click',cost:8000,mult:10,type:'click'},
+  {id:'u5',name:'Golden Lemon',icon:'🌟',desc:'50× click',cost:100000,mult:50,type:'click'},
+  {id:'u6',name:'Cart Wheels',icon:'🛒',desc:'2× business',cost:500,mult:2,type:'biz'},
+  {id:'u7',name:'Shade Umbrella',icon:'☂️',desc:'3× business',cost:3000,mult:3,type:'biz'},
+  {id:'u8',name:'Marketing Flyers',icon:'📄',desc:'5× business',cost:20000,mult:5,type:'biz'},
+  {id:'u9',name:'Premium Recipe',icon:'📋',desc:'8× business',cost:150000,mult:8,type:'biz'},
+  {id:'u10',name:'Robot Arms',icon:'🤖',desc:'20× business',cost:2000000,mult:20,type:'biz'},
 ];
 
-const BUILDINGS = [
+const BUILDINGS=[
   {id:'b1',name:'Lemon Stand',icon:'🏪',desc:'Basic street stand',base:0.5,baseCost:15,scale:1.15},
-  {id:'b2',name:'Juice Bar',icon:'🥤',desc:'Fresh lemonade shop',base:3,baseCost:100,scale:1.15},
-  {id:'b3',name:'Lemon Farm',icon:'🌾',desc:'Grow your own lemons',base:20,baseCost:1100,scale:1.15},
-  {id:'b4',name:'Lemon Factory',icon:'🏭',desc:'Industrial-scale squeezing',base:100,baseCost:12000,scale:1.15},
+  {id:'b2',name:'Juice Bar',icon:'🥤',desc:'Fresh lemonade',base:3,baseCost:100,scale:1.15},
+  {id:'b3',name:'Lemon Farm',icon:'🌾',desc:'Grow your own',base:20,baseCost:1100,scale:1.15},
+  {id:'b4',name:'Lemon Factory',icon:'🏭',desc:'Industrial scale',base:100,baseCost:12000,scale:1.15},
   {id:'b5',name:'Lemon Mine',icon:'⛏️',desc:'Mining lemon gold',base:500,baseCost:130000,scale:1.15},
-  {id:'b6',name:'Lemon Lab',icon:'🔬',desc:'Scientific lemon research',base:2000,baseCost:1400000,scale:1.15},
-  {id:'b7',name:'Lemon Portal',icon:'🌀',desc:'Lemons from another dimension',base:10000,baseCost:20000000,scale:1.15},
-  {id:'b8',name:'Lemon Planet',icon:'🪐',desc:'Entire planet of lemons',base:50000,baseCost:300000000,scale:1.15},
+  {id:'b6',name:'Lemon Lab',icon:'🔬',desc:'Research lemons',base:2000,baseCost:1400000,scale:1.15},
+  {id:'b7',name:'Lemon Portal',icon:'🌀',desc:'Interdimensional',base:10000,baseCost:20000000,scale:1.15},
+  {id:'b8',name:'Lemon Planet',icon:'🪐',desc:'A whole planet',base:50000,baseCost:300000000,scale:1.15},
 ];
 
-const MILESTONES = [
+const MILESTONES=[
   {val:1,msg:'First lemon sold! 🍋'},
-  {val:100,msg:'100 lemons! You\'re on a roll!'},
-  {val:1000,msg:'1,000 lemons! Lemon legend!'},
-  {val:10000,msg:'10K lemons! Absolutely zesty!'},
-  {val:100000,msg:'100K lemons! Lemon empire!'},
+  {val:100,msg:'100 lemons! Rolling now!'},
+  {val:1000,msg:'1,000 lemons! Legend!'},
+  {val:10000,msg:'10K lemons! So zesty!'},
+  {val:100000,msg:'100K lemons! Empire!'},
   {val:1000000,msg:'1 MILLION lemons! 🌟'},
 ];
 
-let G = {
-  money:0, totalEarned:0, clicks:0,
-  clickMult:1, bizMult:1,
-  prestige:0, prestigeMult:1,
-  upgrades:{}, buildings:{},
-};
+const PARTICLE_COLORS=['#FFD700','#FFB300','#FFF176','#A5D6A7','#66BB6A'];
 
-function loadGame(){
-  try{ const s=localStorage.getItem(SAVE_KEY); if(s){const d=JSON.parse(s);Object.assign(G,d);} }catch(e){}
+let G={money:0,totalEarned:0,clicks:0,clickMult:1,bizMult:1,prestige:0,prestigeMult:1,upgrades:{},buildings:{},theme:'light'};
+let seenMilestones=new Set();
+let activeTab='upgrades';
+
+function load(){
+  try{const s=localStorage.getItem(SAVE_KEY);if(s){const d=JSON.parse(s);Object.assign(G,d);}}catch(e){}
 }
-function saveGame(){
+function save(){
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}
-  document.getElementById('save-bar').textContent='💾 Saved at '+new Date().toLocaleTimeString();
+  document.getElementById('save-bar').textContent='💾 Saved '+new Date().toLocaleTimeString();
 }
 
 function fmt(n){
-  if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
-  if(n>=1e9)  return '$'+(n/1e9).toFixed(2)+'B';
-  if(n>=1e6)  return '$'+(n/1e6).toFixed(2)+'M';
-  if(n>=1e3)  return '$'+(n/1e3).toFixed(2)+'K';
-  return '$'+Math.floor(n).toLocaleString();
+  if(n>=1e12)return'$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9)return'$'+(n/1e9).toFixed(2)+'B';
+  if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';
+  if(n>=1e3)return'$'+(n/1e3).toFixed(1)+'K';
+  return'$'+Math.floor(n).toLocaleString();
 }
 
-function clickValue(){ return 1 * G.clickMult * G.prestigeMult; }
-function incomePerSec(){
+function clickVal(){return 1*G.clickMult*G.prestigeMult;}
+function ips(){
   let t=0;
-  BUILDINGS.forEach(b=>{ const c=G.buildings[b.id]||0; if(c>0) t+=b.base*c*G.bizMult*G.prestigeMult; });
+  BUILDINGS.forEach(b=>{const c=G.buildings[b.id]||0;if(c>0)t+=b.base*c*G.bizMult*G.prestigeMult;});
   return t;
 }
-function buildingCost(b){ return Math.floor(b.baseCost*Math.pow(b.scale,G.buildings[b.id]||0)); }
+function bCost(b){return Math.floor(b.baseCost*Math.pow(b.scale,G.buildings[b.id]||0));}
 
-let seenMilestones=new Set();
 function checkMilestones(){
-  MILESTONES.forEach(m=>{ if(!seenMilestones.has(m.val)&&G.clicks>=m.val){ seenMilestones.add(m.val); showMilestone(m.msg); } });
+  MILESTONES.forEach(m=>{
+    if(!seenMilestones.has(m.val)&&G.clicks>=m.val){seenMilestones.add(m.val);showMilestone(m.msg);}
+  });
 }
+
+let mTimer=null;
 function showMilestone(msg){
   const el=document.getElementById('milestone-banner');
-  el.textContent=msg; el.style.opacity='1';
-  setTimeout(()=>el.style.opacity='0',3000);
-}
-function showToast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.style.opacity='1';
-  setTimeout(()=>el.style.opacity='0',2000);
+  el.textContent=msg;el.style.opacity='1';
+  if(mTimer)clearTimeout(mTimer);
+  mTimer=setTimeout(()=>el.style.opacity='0',2800);
 }
 
-let floatThrottle=0;
-function spawnFloat(x,y,val){
-  const now=Date.now();
-  if(now-floatThrottle<80) return;
-  floatThrottle=now;
-  const el=document.createElement('div');
-  el.className='float-num';
-  el.textContent='+'+fmt(val);
-  el.style.left=(x-30)+'px';
-  el.style.top=(y-20)+'px';
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),1000);
+let tTimer=null;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.opacity='1';
+  if(tTimer)clearTimeout(tTimer);
+  tTimer=setTimeout(()=>el.style.opacity='0',1800);
 }
 
 function renderMoney(){
-  document.getElementById('money-amount').textContent=fmt(G.money);
-  document.getElementById('money-per-sec').textContent=fmt(incomePerSec())+' / sec';
-  const cv=clickValue();
-  document.getElementById('click-value').textContent='+'+fmt(cv)+' per click';
+  const am=document.getElementById('money-amount');
+  am.textContent=fmt(G.money);
+  am.classList.remove('pop');void am.offsetWidth;am.classList.add('pop');
+  document.getElementById('money-per-sec').textContent=fmt(ips())+' / sec';
+  document.getElementById('click-value').textContent='+'+fmt(clickVal())+' per click';
   document.getElementById('stat-clicks').textContent=G.clicks.toLocaleString();
   document.getElementById('stat-total').textContent=fmt(G.totalEarned);
   document.getElementById('stat-prestige').textContent=G.prestige;
   const ready=G.totalEarned>=1000000;
   document.getElementById('prestige-btn').className=ready?'ready':'';
-  document.getElementById('prestige-info').textContent=ready
-    ?'Ready to prestige! +×1.5 multiplier 🌟'
-    :'Need '+fmt(1000000-G.totalEarned)+' more to prestige';
+  document.getElementById('prestige-info').textContent=ready?'Ready! +×1.5 forever 🌟':'Need '+fmt(Math.max(0,1000000-G.totalEarned))+' more';
 }
 
 function renderShop(){
-  const ul=document.getElementById('upgrades-list');
+  // UPGRADES
+  const ul=document.getElementById('tab-upgrades');
   ul.innerHTML='';
   UPGRADES.forEach(u=>{
     const owned=G.upgrades[u.id];
-    const canAfford=G.money>=u.cost;
-    const div=document.createElement('div');
-    div.className='shop-item'+(owned?' locked':(canAfford?' affordable':''));
-    div.innerHTML=`<div class="item-icon">${u.icon}</div>
+    const can=G.money>=u.cost;
+    const d=document.createElement('div');
+    d.className='shop-item'+(owned?' locked':(can?' affordable':''));
+    d.innerHTML=`<div class="item-icon">${u.icon}</div>
       <div class="item-info"><div class="item-name">${u.name}</div><div class="item-desc">${u.desc}</div></div>
-      <div class="item-right">${owned?'<span class="item-owned">✓ owned</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;
-    if(!owned) div.onclick=()=>buyUpgrade(u);
-    ul.appendChild(div);
+      <div class="item-right">${owned?'<span class="item-owned">✓</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;
+    if(!owned)d.onclick=()=>buyUpgrade(u);
+    ul.appendChild(d);
   });
-
-  const bl=document.getElementById('buildings-list');
+  // BUILDINGS
+  const bl=document.getElementById('tab-buildings');
   bl.innerHTML='';
   BUILDINGS.forEach(b=>{
     const cnt=G.buildings[b.id]||0;
-    const cost=buildingCost(b);
-    const canAfford=G.money>=cost;
-    const ips=cnt>0?(b.base*cnt*G.bizMult*G.prestigeMult):0;
-    const div=document.createElement('div');
-    div.className='shop-item'+(canAfford?' affordable':'');
-    div.innerHTML=`<div class="item-icon">${b.icon}</div>
-      <div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${cnt>0?fmt(ips)+'/s':b.desc}</div></div>
-      <div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'owned: '+cnt:''}</div></div>`;
-    div.onclick=()=>buyBuilding(b);
-    bl.appendChild(div);
+    const cost=bCost(b);
+    const can=G.money>=cost;
+    const income=cnt>0?fmt(b.base*cnt*G.bizMult*G.prestigeMult)+'/s':b.desc;
+    const d=document.createElement('div');
+    d.className='shop-item'+(can?' affordable':'');
+    d.innerHTML=`<div class="item-icon">${b.icon}</div>
+      <div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${income}</div></div>
+      <div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'×'+cnt:''}</div></div>`;
+    d.onclick=()=>buyBuilding(b);
+    bl.appendChild(d);
   });
 }
 
 function buyUpgrade(u){
-  if(G.upgrades[u.id]||G.money<u.cost) return;
-  G.money-=u.cost; G.upgrades[u.id]=true;
-  if(u.type==='click') G.clickMult*=u.mult; else G.bizMult*=u.mult;
-  showToast('✨ '+u.name+' purchased!');
-  renderShop(); renderMoney();
+  if(G.upgrades[u.id]||G.money<u.cost)return;
+  G.money-=u.cost;G.upgrades[u.id]=true;
+  if(u.type==='click')G.clickMult*=u.mult;else G.bizMult*=u.mult;
+  showToast('✨ '+u.name+' unlocked!');
+  renderShop();renderMoney();
 }
 function buyBuilding(b){
-  const cost=buildingCost(b);
-  if(G.money<cost){showToast('Not enough money!');return;}
-  G.money-=cost; G.buildings[b.id]=(G.buildings[b.id]||0)+1;
-  renderShop(); renderMoney();
+  const cost=bCost(b);
+  if(G.money<cost){showToast('Not enough!');return;}
+  G.money-=cost;G.buildings[b.id]=(G.buildings[b.id]||0)+1;
+  renderShop();renderMoney();
 }
 function doPrestige(){
-  G.prestige++; G.prestigeMult=Math.pow(1.5,G.prestige);
-  G.money=0; G.clicks=0; G.totalEarned=0;
-  G.clickMult=1; G.bizMult=1; G.upgrades={}; G.buildings={};
+  G.prestige++;G.prestigeMult=Math.pow(1.5,G.prestige);
+  G.money=0;G.clicks=0;G.totalEarned=0;G.clickMult=1;G.bizMult=1;G.upgrades={};G.buildings={};
   seenMilestones=new Set();
-  saveGame(); renderShop(); renderMoney();
-  showMilestone('🌟 Prestiged! ×'+G.prestigeMult.toFixed(1)+' multiplier active!');
+  save();renderShop();renderMoney();
+  showMilestone('🌟 Prestiged! ×'+G.prestigeMult.toFixed(1)+' active!');
 }
 
-// ─── HOLD TO AUTO-CLICK ───────────────────────────────────────────
-const btn = document.getElementById('lemon-btn');
-const hint = document.getElementById('hold-hint');
-let isHolding = false;
-let holdInterval = null;
-let lastClickPos = {x: 0, y: 0};
-const HOLD_DELAY = 500;    // ms before auto-click kicks in
-const AUTO_CPS = 8;        // clicks per second while holding
-let holdTimer = null;
+// THEME
+function applyTheme(t){
+  G.theme=t;
+  document.body.setAttribute('data-theme',t);
+  document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Light':'🌙 Dark';
+}
+document.getElementById('theme-btn').addEventListener('click',()=>{
+  applyTheme(G.theme==='dark'?'light':'dark');
+  save();
+});
 
-function doClick(x, y){
-  const val = clickValue();
-  G.money += val;
-  G.totalEarned += val;
-  G.clicks++;
+// TABS
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    activeTab=btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('visible'));
+    document.getElementById('tab-'+activeTab).classList.add('visible');
+  });
+});
+
+// PARTICLES
+function spawnParticles(x,y){
+  const count=6;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='particle';
+    const angle=(i/count)*Math.PI*2;
+    const dist=30+Math.random()*30;
+    const dx=Math.cos(angle)*dist+'px';
+    const dy=Math.sin(angle)*dist+'px';
+    const sz=4+Math.random()*5;
+    el.style.cssText=`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${PARTICLE_COLORS[Math.floor(Math.random()*PARTICLE_COLORS.length)]};--dx:${dx};--dy:${dy};animation-duration:${0.5+Math.random()*0.3}s`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),900);
+  }
+}
+
+let floatThrottle=0;
+function spawnFloat(x,y,val){
+  const now=Date.now();
+  if(now-floatThrottle<100)return;
+  floatThrottle=now;
+  const el=document.createElement('div');
+  el.className='float-num';
+  el.textContent='+'+fmt(val);
+  el.style.left=(x-20)+'px';el.style.top=(y-10)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),900);
+}
+
+// CLICK / HOLD
+const btn=document.getElementById('lemon-btn');
+const ring=document.getElementById('lemon-ring');
+const hint=document.getElementById('hold-hint');
+let isHolding=false,holdInterval=null,holdTimer=null;
+let lastPos={x:0,y:0};
+const AUTO_CPS=8,HOLD_DELAY=400;
+
+function doClick(x,y){
+  const val=clickVal();
+  G.money+=val;G.totalEarned+=val;G.clicks++;
   checkMilestones();
-  spawnFloat(x || lastClickPos.x, y || lastClickPos.y, val);
+  spawnFloat(x||lastPos.x,y||lastPos.y,val);
+  spawnParticles(x||lastPos.x,y||lastPos.y);
   renderMoney();
-  if(G.clicks % 15 === 0) renderShop();
+  if(G.clicks%15===0)renderShop();
 }
 
-function startHold(x, y){
-  if(isHolding) return;
-  isHolding = true;
-  lastClickPos = {x, y};
+function startHold(x,y){
+  if(isHolding)return;
+  isHolding=true;lastPos={x,y};
   btn.classList.add('pressed');
-  // single click immediately
-  doClick(x, y);
-  // after HOLD_DELAY, start rapid fire
-  holdTimer = setTimeout(()=>{
-    btn.classList.remove('pressed');
-    btn.classList.add('holding');
-    hint.classList.add('active');
-    hint.textContent = 'Auto-clicking! 🍋🍋🍋';
-    holdInterval = setInterval(()=>{
-      doClick(lastClickPos.x, lastClickPos.y);
-    }, 1000 / AUTO_CPS);
-  }, HOLD_DELAY);
+  doClick(x,y);
+  holdTimer=setTimeout(()=>{
+    btn.classList.remove('pressed');btn.classList.add('holding');
+    ring.classList.add('active');
+    hint.classList.add('active');hint.textContent='Auto-clicking! 🍋🍋🍋';
+    holdInterval=setInterval(()=>doClick(lastPos.x,lastPos.y),1000/AUTO_CPS);
+  },HOLD_DELAY);
 }
-
 function endHold(){
-  if(!isHolding) return;
-  isHolding = false;
-  clearTimeout(holdTimer);
-  clearInterval(holdInterval);
-  holdInterval = null;
+  if(!isHolding)return;
+  isHolding=false;
+  clearTimeout(holdTimer);clearInterval(holdInterval);holdInterval=null;
   btn.classList.remove('pressed','holding');
-  hint.classList.remove('active');
-  hint.textContent = 'Hold to auto-click 🍋';
+  ring.classList.remove('active');
+  hint.classList.remove('active');hint.textContent='Hold to auto-click 🍋';
 }
 
-// Mouse
-btn.addEventListener('mousedown', e=>{ e.preventDefault(); startHold(e.clientX, e.clientY); });
-document.addEventListener('mouseup', ()=>{ if(isHolding) endHold(); });
-// Touch
-btn.addEventListener('touchstart', e=>{ e.preventDefault(); const t=e.touches[0]; startHold(t.clientX, t.clientY); }, {passive:false});
-document.addEventListener('touchend', ()=>{ if(isHolding) endHold(); });
-document.addEventListener('touchcancel', ()=>{ if(isHolding) endHold(); });
-// Update float position on move
-btn.addEventListener('mousemove', e=>{ lastClickPos={x:e.clientX,y:e.clientY}; });
+btn.addEventListener('mousedown',e=>{e.preventDefault();startHold(e.clientX,e.clientY);});
+document.addEventListener('mouseup',()=>{if(isHolding)endHold();});
+btn.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];startHold(t.clientX,t.clientY);},{passive:false});
+document.addEventListener('touchend',()=>{if(isHolding)endHold();});
+document.addEventListener('touchcancel',()=>{if(isHolding)endHold();});
+btn.addEventListener('mousemove',e=>{lastPos={x:e.clientX,y:e.clientY};});
 
 document.getElementById('prestige-btn').addEventListener('click',()=>{
-  if(G.totalEarned<1000000) return;
+  if(G.totalEarned<1000000)return;
   document.getElementById('prestige-modal').classList.add('show');
 });
 document.getElementById('cancel-prestige').addEventListener('click',()=>document.getElementById('prestige-modal').classList.remove('show'));
 document.getElementById('confirm-prestige').addEventListener('click',()=>{
-  document.getElementById('prestige-modal').classList.remove('show');
-  doPrestige();
+  document.getElementById('prestige-modal').classList.remove('show');doPrestige();
 });
 
-// Game loop
+// GAME LOOP
 let lastTick=Date.now();
-function gameTick(){
-  const now=Date.now();
-  const dt=(now-lastTick)/1000;
-  lastTick=now;
-  const income=incomePerSec()*dt;
-  if(income>0){
-    G.money+=income; G.totalEarned+=income;
-    checkMilestones(); renderMoney();
-    if(Math.random()<0.05) renderShop();
-  }
-  requestAnimationFrame(gameTick);
+function tick(){
+  const now=Date.now();const dt=(now-lastTick)/1000;lastTick=now;
+  const income=ips()*dt;
+  if(income>0){G.money+=income;G.totalEarned+=income;checkMilestones();renderMoney();}
+  if(Math.random()<0.04)renderShop();
+  requestAnimationFrame(tick);
 }
 
-setInterval(saveGame,10000);
-loadGame();
-renderMoney();
-renderShop();
-gameTick();
+setInterval(save,10000);
+load();
+applyTheme(G.theme||'light');
+renderMoney();renderShop();tick();
 </script>
 </body>
 </html>
