@@ -6,343 +6,160 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --bg:#FFFDE7;--bg2:#FFF8DC;--bg3:#FFF3CD;
-  --panel:#FFFFF5;--panel2:#FFFEF0;
+  --bg:#FFFDE7;--bg2:#FFF8DC;--panel:#FFFFF5;--panel2:#FFFEF0;
   --border:#FFE082;--border2:#FFD740;
   --text:#2C1810;--text2:#7A5C3A;--text3:#B8956A;
   --lemon:#FFD700;--lemon-d:#E6A800;--lemon-dd:#CC8800;
   --green:#3D9142;--green-d:#2A6B2F;--green-bg:#E8F5E9;
-  --coin:#E6A800;--coin-bg:#FFF8DC;
-  --red:#C0392B;--red-bg:#FDEDEC;
-  --shop-item-hover:#FFF8E1;--shop-item-buy:#F1F8E9;
-  --shadow:rgba(180,120,0,0.15);
-  --float-color:#2A6B2F;
-  --btn-prestige-bg:linear-gradient(135deg,#FF6B35,#FF8C42);
-  --btn-prestige-shadow:#CC4400;
-  --held-ring:#FFD700;
+  --coin:#E6A800;--red:#C0392B;
+  --shadow:rgba(180,120,0,0.15);--float-color:#2A6B2F;
+  --shop-hover:#FFF8E1;--shop-buy:#F1F8E9;
+  --prestige-bg:linear-gradient(135deg,#FF6B35,#FF8C42);--prestige-shadow:#CC4400;
 }
-[data-theme="dark"]{
-  --bg:#1A1500;--bg2:#231C00;--bg3:#2C2200;
-  --panel:#1E1A00;--panel2:#231C00;
+[data-theme=dark]{
+  --bg:#1A1500;--bg2:#231C00;--panel:#1E1A00;--panel2:#231C00;
   --border:#4A3800;--border2:#6B5200;
   --text:#F5E6A0;--text2:#C8A84B;--text3:#7A6030;
-  --lemon:#FFD700;--lemon-d:#E6A800;--lemon-dd:#FFE040;
-  --green:#5CBF61;--green-d:#3A9140;--green-bg:#0A1E0B;
-  --coin:#FFB300;--coin-bg:#2C2200;
-  --red:#E74C3C;--red-bg:#2C0A08;
-  --shop-item-hover:#2C2200;--shop-item-buy:#0A1E0B;
-  --shadow:rgba(255,200,0,0.08);
-  --float-color:#A8E6AB;
-  --btn-prestige-bg:linear-gradient(135deg,#C0392B,#E74C3C);
-  --btn-prestige-shadow:#8B0000;
-  --held-ring:#FFD700;
+  --lemon-dd:#FFE040;--green:#5CBF61;--green-d:#3A9140;--green-bg:#0A1E0B;
+  --coin:#FFB300;--shadow:rgba(255,200,0,0.08);--float-color:#A8E6AB;
+  --shop-hover:#2C2200;--shop-buy:#0A1E0B;
+  --prestige-bg:linear-gradient(135deg,#C0392B,#E74C3C);--prestige-shadow:#8B0000;
 }
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);height:620px;overflow:hidden;transition:background .3s,color .3s}
+#game{display:grid;grid-template-columns:1fr 270px;height:620px;overflow:hidden;position:relative}
 
-body{
-  font-family:'Nunito',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  height:600px;
-  overflow:hidden;
-  transition:background 0.3s,color 0.3s;
-}
+/* LEFT */
+#left{display:flex;flex-direction:column;align-items:center;padding:10px 8px 6px;background:var(--bg);overflow:hidden;position:relative}
+#topbar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 2px;margin-bottom:6px;gap:6px}
+h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--lemon-dd);letter-spacing:.5px;line-height:1;white-space:nowrap}
+.hbtn{background:var(--panel);border:1.5px solid var(--border);border-radius:16px;padding:3px 9px;cursor:pointer;font-size:.72rem;font-weight:700;color:var(--text2);transition:background .2s;white-space:nowrap}
+.hbtn:hover{background:var(--border);color:var(--text)}
+#auth-status{font-size:.62rem;color:var(--text3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 
-#game{
-  display:grid;
-  grid-template-columns:1fr 260px;
-  height:600px;
-  overflow:hidden;
-}
+#money-display{background:var(--panel);border:2px solid var(--lemon);border-radius:14px;padding:7px 18px;text-align:center;width:100%;max-width:270px;margin-bottom:5px;box-shadow:0 3px 0 var(--lemon-d),0 5px 14px var(--shadow);transition:background .3s}
+#money-label{font-size:.62rem;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+#money-amount{font-family:'Fredoka One',cursive;font-size:1.9rem;color:var(--green);line-height:1.1}
+#money-amount.pop{animation:mPop .18s ease}
+@keyframes mPop{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
+#money-per-sec{font-size:.64rem;color:var(--text3);font-weight:600}
+#click-value{font-family:'Fredoka One',cursive;font-size:.78rem;color:var(--green);background:var(--green-bg);border:1.5px solid var(--green-d);border-radius:8px;padding:2px 10px;margin-bottom:3px;transition:background .3s}
 
-/* ── LEFT ── */
-#left{
-  display:flex;flex-direction:column;align-items:center;
-  padding:12px 8px 8px;
-  background:var(--bg);
-  overflow:hidden;
-  position:relative;
-}
-
-/* header row */
-#topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  width:100%;padding:0 4px;margin-bottom:6px;
-}
-h1{
-  font-family:'Fredoka One',cursive;
-  font-size:1.6rem;color:var(--lemon-dd);
-  text-shadow:1px 1px 0 rgba(255,255,255,0.15);
-  letter-spacing:0.5px;line-height:1;
-}
-
-/* theme toggle */
-#theme-btn{
-  background:var(--panel);border:1.5px solid var(--border);
-  border-radius:20px;padding:4px 10px;cursor:pointer;
-  font-size:0.78rem;font-weight:700;color:var(--text2);
-  display:flex;align-items:center;gap:5px;
-  transition:background 0.2s,color 0.2s;white-space:nowrap;
-}
-#theme-btn:hover{background:var(--border);color:var(--text)}
-
-/* money display */
-#money-display{
-  background:var(--panel);
-  border:2px solid var(--lemon);
-  border-radius:14px;
-  padding:8px 20px;
-  text-align:center;
-  width:100%;max-width:280px;
-  margin-bottom:6px;
-  box-shadow:0 3px 0 var(--lemon-d),0 5px 16px var(--shadow);
-  transition:background 0.3s,border-color 0.3s;
-}
-#money-label{font-size:0.65rem;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
-#money-amount{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--green);line-height:1.1;transition:transform 0.1s}
-#money-amount.pop{animation:moneyPop 0.18s ease}
-@keyframes moneyPop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-#money-per-sec{font-size:0.68rem;color:var(--text3);font-weight:600}
-
-/* click label */
-#click-value{
-  font-family:'Fredoka One',cursive;font-size:0.82rem;
-  color:var(--green);
-  background:var(--green-bg);
-  border:1.5px solid var(--green-d);
-  border-radius:8px;padding:2px 10px;
-  margin-bottom:4px;
-  transition:background 0.3s;
-}
-
-/* lemon area */
-#clicker-area{
-  position:relative;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  width:200px;height:200px;
-  margin:0;
-}
-
-#lemon-btn{
-  background:none;border:none;cursor:pointer;
-  width:170px;height:170px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;z-index:2;
-  -webkit-tap-highlight-color:transparent;
-  outline:none;user-select:none;-webkit-user-select:none;
-}
-
-/* ring glow when holding */
-#lemon-ring{
-  position:absolute;
-  width:170px;height:170px;
-  border-radius:50%;
-  border:3px solid transparent;
-  pointer-events:none;
-  transition:border-color 0.2s,box-shadow 0.2s;
-  z-index:1;
-}
-#lemon-ring.active{
-  border-color:var(--held-ring);
-  box-shadow:0 0 18px 4px rgba(255,215,0,0.35);
-  animation:ringPulse 0.5s ease infinite alternate;
-}
-@keyframes ringPulse{0%{box-shadow:0 0 10px 2px rgba(255,215,0,0.25)}100%{box-shadow:0 0 24px 8px rgba(255,215,0,0.5)}}
-
-#lemon-svg{
-  transition:transform 0.08s ease,filter 0.08s ease;
-  transform-origin:center;
-  filter:drop-shadow(0 6px 0 var(--lemon-d)) drop-shadow(0 0 14px rgba(255,200,0,0.3));
-}
-#lemon-btn.pressed #lemon-svg{transform:scale(0.87) translateY(5px);filter:drop-shadow(0 1px 0 var(--lemon-d)) drop-shadow(0 0 24px rgba(255,215,0,0.6))}
-#lemon-btn.holding #lemon-svg{animation:holdBounce 0.2s ease infinite alternate}
-@keyframes holdBounce{0%{transform:scale(0.90) translateY(4px)}100%{transform:scale(0.94) translateY(1px)}}
-
-/* particles */
-.particle{
-  position:fixed;pointer-events:none;
-  border-radius:50%;
-  animation:particleBurst 0.7s ease-out forwards;
-  z-index:9998;
-}
-@keyframes particleBurst{
-  0%{opacity:1;transform:translate(0,0) scale(1)}
-  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}
-}
-.float-num{
-  position:fixed;pointer-events:none;
-  font-family:'Fredoka One',cursive;font-size:1.3rem;
-  color:var(--float-color);
-  text-shadow:0 1px 3px rgba(0,0,0,0.2);
-  animation:floatUp 0.9s ease-out forwards;
-  z-index:9999;
-}
-@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.2)}}
-
-#hold-hint{font-size:0.68rem;color:var(--text3);font-weight:700;margin-top:2px;transition:color 0.2s;letter-spacing:0.2px}
+#clicker-area{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:185px;height:185px;margin:0}
+#lemon-ring{position:absolute;width:165px;height:165px;border-radius:50%;border:3px solid transparent;pointer-events:none;transition:border-color .2s,box-shadow .2s;z-index:1}
+#lemon-ring.active{border-color:var(--lemon);box-shadow:0 0 18px 4px rgba(255,215,0,.35);animation:rPulse .5s ease infinite alternate}
+@keyframes rPulse{0%{box-shadow:0 0 10px 2px rgba(255,215,0,.2)}100%{box-shadow:0 0 24px 8px rgba(255,215,0,.5)}}
+#lemon-btn{background:none;border:none;cursor:pointer;width:165px;height:165px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:2;-webkit-tap-highlight-color:transparent;outline:none;user-select:none;-webkit-user-select:none}
+#lemon-svg{transition:transform .08s ease,filter .08s ease;transform-origin:center;filter:drop-shadow(0 6px 0 var(--lemon-d)) drop-shadow(0 0 14px rgba(255,200,0,.3))}
+#lemon-btn.pressed #lemon-svg{transform:scale(.87) translateY(5px);filter:drop-shadow(0 1px 0 var(--lemon-d)) drop-shadow(0 0 24px rgba(255,215,0,.6))}
+#lemon-btn.holding #lemon-svg{animation:hBounce .2s ease infinite alternate}
+@keyframes hBounce{0%{transform:scale(.90) translateY(4px)}100%{transform:scale(.94) translateY(1px)}}
+#hold-hint{font-size:.65rem;color:var(--text3);font-weight:700;margin-top:2px;transition:color .2s}
 #hold-hint.active{color:var(--lemon-dd)}
 
-/* stats pills */
-#stats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;width:100%}
-.stat-pill{
-  background:var(--panel);border:1.5px solid var(--border);
-  border-radius:20px;padding:2px 9px;
-  font-size:0.66rem;font-weight:700;color:var(--text2);
-  transition:background 0.3s;
-}
+.particle{position:fixed;pointer-events:none;border-radius:50%;animation:pBurst .7s ease-out forwards;z-index:9998}
+@keyframes pBurst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
+.float-num{position:fixed;pointer-events:none;font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--float-color);text-shadow:0 1px 3px rgba(0,0,0,.2);animation:fUp .9s ease-out forwards;z-index:9999}
+@keyframes fUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.2)}}
+
+#stats{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;width:100%;margin-top:5px}
+.stat-pill{background:var(--panel);border:1.5px solid var(--border);border-radius:20px;padding:2px 8px;font-size:.63rem;font-weight:700;color:var(--text2)}
 .stat-pill span{color:var(--green)}
 
-/* ── RIGHT PANEL ── */
-#right{
-  background:var(--panel);
-  border-left:2px solid var(--border);
-  display:flex;flex-direction:column;
-  height:600px;
-  transition:background 0.3s,border-color 0.3s;
-}
-
-#shop-header{
-  padding:10px 12px 5px;
-  border-bottom:1.5px solid var(--border);
-  flex-shrink:0;
-}
-#shop-header h2{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--lemon-dd)}
-#shop-header p{font-size:0.66rem;color:var(--text3);margin-top:1px}
-
-/* TAB BAR */
-#tab-bar{
-  display:flex;border-bottom:1.5px solid var(--border);
-  flex-shrink:0;
-}
-.tab{
-  flex:1;padding:6px 4px;
-  font-family:'Fredoka One',cursive;font-size:0.78rem;
-  color:var(--text3);
-  background:none;border:none;cursor:pointer;
-  transition:color 0.2s,background 0.2s;
-  border-bottom:2px solid transparent;
-}
+/* RIGHT */
+#right{background:var(--panel);border-left:2px solid var(--border);display:flex;flex-direction:column;height:620px;transition:background .3s,border-color .3s}
+#shop-header{padding:8px 12px 4px;border-bottom:1.5px solid var(--border);flex-shrink:0}
+#shop-header h2{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lemon-dd)}
+#shop-header p{font-size:.62rem;color:var(--text3)}
+#tab-bar{display:flex;border-bottom:1.5px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:7px 4px;font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--text3);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,background .2s}
 .tab.active{color:var(--lemon-dd);border-bottom-color:var(--lemon);background:var(--panel2)}
-.tab:hover:not(.active){background:var(--shop-item-hover);color:var(--text2)}
-
-/* SHOP CONTENT */
-#shop-content{flex:1;overflow-y:auto;overflow-x:hidden}
+.tab:hover:not(.active){background:var(--shop-hover);color:var(--text2)}
+#shop-content{flex:1;overflow-y:auto;overflow-x:hidden;min-height:0}
 #shop-content::-webkit-scrollbar{width:3px}
-#shop-content::-webkit-scrollbar-track{background:transparent}
 #shop-content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-
 .shop-tab{display:none}
 .shop-tab.visible{display:block}
-
-.shop-item{
-  display:flex;align-items:center;gap:7px;
-  padding:6px 10px;cursor:pointer;
-  transition:background 0.12s;
-  border-bottom:1px solid var(--border);
-}
-.shop-item:hover{background:var(--shop-item-hover)}
-.shop-item.affordable{background:var(--shop-item-buy)}
-.shop-item.affordable:hover{background:var(--shop-item-buy);filter:brightness(0.97)}
-.shop-item.locked{opacity:0.4;cursor:not-allowed}
-.item-icon{font-size:1.35rem;width:28px;text-align:center;flex-shrink:0}
+.shop-item{display:flex;align-items:center;gap:6px;padding:7px 10px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border)}
+.shop-item:hover{background:var(--shop-hover)}
+.shop-item.affordable{background:var(--shop-buy)}
+.shop-item.locked{opacity:.38;cursor:not-allowed}
+.item-icon{font-size:1.3rem;width:26px;text-align:center;flex-shrink:0}
 .item-info{flex:1;min-width:0}
-.item-name{font-size:0.74rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.item-desc{font-size:0.62rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-name{font-size:.75rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-desc{font-size:.62rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .item-right{text-align:right;flex-shrink:0}
-.item-cost{font-family:'Fredoka One',cursive;font-size:0.82rem;color:var(--coin)}
-.item-count{font-size:0.6rem;color:var(--text3)}
-.item-owned{font-size:0.6rem;background:var(--green);color:#fff;border-radius:8px;padding:1px 5px;display:inline-block}
+.item-cost{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--coin)}
+.item-count{font-size:.58rem;color:var(--text3)}
+.item-owned{font-size:.58rem;background:var(--green);color:#fff;border-radius:8px;padding:1px 5px;display:inline-block}
 
-/* PRESTIGE */
-#prestige-section{
-  padding:8px 12px;
-  border-top:1.5px solid var(--border);
-  flex-shrink:0;
-}
-#prestige-btn{
-  width:100%;
-  background:var(--btn-prestige-bg);
-  border:none;border-radius:10px;color:#fff;
-  font-family:'Fredoka One',cursive;font-size:0.9rem;
-  padding:8px;cursor:pointer;
-  box-shadow:0 3px 0 var(--btn-prestige-shadow);
-  transition:transform 0.1s,box-shadow 0.1s,opacity 0.2s;
-  opacity:0.45;
-}
+#prestige-section{padding:7px 12px;border-top:1.5px solid var(--border);flex-shrink:0}
+#prestige-btn{width:100%;background:var(--prestige-bg);border:none;border-radius:10px;color:#fff;font-family:'Fredoka One',cursive;font-size:.88rem;padding:7px;cursor:pointer;box-shadow:0 3px 0 var(--prestige-shadow);transition:transform .1s,opacity .2s;opacity:.45}
 #prestige-btn.ready{opacity:1}
-#prestige-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btn-prestige-shadow)}
-#prestige-info{font-size:0.61rem;color:var(--text3);margin-top:3px;text-align:center}
-
-/* SAVE BAR */
-#save-bar{font-size:0.6rem;color:var(--text3);text-align:center;padding:3px;border-top:1px solid var(--border);flex-shrink:0}
+#prestige-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--prestige-shadow)}
+#prestige-info{font-size:.6rem;color:var(--text3);margin-top:3px;text-align:center}
+#save-bar{font-size:.58rem;color:var(--text3);text-align:center;padding:3px;border-top:1px solid var(--border);flex-shrink:0}
 
 /* MILESTONE */
-#milestone-wrap{
-  position:absolute;top:8px;left:50%;transform:translateX(-50%);
-  z-index:500;pointer-events:none;width:max-content;max-width:96%;
-}
-#milestone-banner{
-  background:var(--lemon);border:2.5px solid var(--lemon-dd);
-  border-radius:12px;padding:7px 18px;
-  font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--lemon-dd);
-  box-shadow:0 4px 18px rgba(180,120,0,0.3);
-  opacity:0;transition:opacity 0.3s;text-align:center;
-}
+#milestone-wrap{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:500;pointer-events:none;width:max-content;max-width:96%}
+#milestone-banner{background:var(--lemon);border:2.5px solid var(--lemon-dd);border-radius:12px;padding:6px 16px;font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lemon-dd);box-shadow:0 4px 18px rgba(180,120,0,.3);opacity:0;transition:opacity .3s;text-align:center}
 
-/* MODAL */
-#prestige-modal{
-  position:absolute;inset:0;background:rgba(0,0,0,0.55);
-  z-index:1000;display:none;align-items:center;justify-content:center;
-}
-#prestige-modal.show{display:flex}
-#prestige-box{
-  background:var(--panel);border:2.5px solid var(--lemon);
-  border-radius:18px;padding:24px;max-width:280px;width:90%;
-  text-align:center;box-shadow:0 16px 50px rgba(0,0,0,0.4);
-}
-#prestige-box h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--lemon-dd);margin-bottom:6px}
-#prestige-box p{font-size:0.78rem;color:var(--text2);margin-bottom:14px;line-height:1.5}
+/* MODAL OVERLAY */
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal-box{background:var(--panel);border:2.5px solid var(--lemon);border-radius:18px;padding:22px;max-width:270px;width:92%;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.4)}
+.modal-box h2{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--lemon-dd);margin-bottom:6px}
+.modal-box p{font-size:.76rem;color:var(--text2);margin-bottom:12px;line-height:1.5}
 .modal-btns{display:flex;gap:8px}
-.modal-btns button{flex:1;padding:9px;border-radius:9px;border:none;font-family:'Fredoka One',cursive;font-size:0.9rem;cursor:pointer}
-#confirm-prestige{background:var(--btn-prestige-bg);color:#fff;box-shadow:0 2px 0 var(--btn-prestige-shadow)}
-#cancel-prestige{background:var(--panel2);color:var(--text2);border:1.5px solid var(--border)}
+.modal-btns button{flex:1;padding:8px;border-radius:9px;border:none;font-family:'Fredoka One',cursive;font-size:.88rem;cursor:pointer}
+.btn-confirm{background:var(--prestige-bg);color:#fff;box-shadow:0 2px 0 var(--prestige-shadow)}
+.btn-cancel{background:var(--panel2);color:var(--text2);border:1.5px solid var(--border)}
 
-/* TOAST */
-#toast{
-  position:absolute;bottom:50px;left:50%;transform:translateX(-50%);
-  background:var(--text);color:var(--bg);
-  border-radius:9px;padding:6px 16px;
-  font-size:0.74rem;font-weight:700;
-  opacity:0;transition:opacity 0.3s;
-  z-index:900;pointer-events:none;white-space:nowrap;
-}
+/* AUTH MODAL SPECIFICS */
+.auth-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;padding:7px 10px;font-size:.8rem;color:var(--text);margin-bottom:8px;outline:none;font-family:'Nunito',sans-serif}
+.auth-input:focus{border-color:var(--lemon)}
+.btn-primary{width:100%;background:var(--lemon);border:none;border-radius:9px;padding:8px;font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lemon-dd);cursor:pointer;margin-bottom:6px}
+.btn-secondary{width:100%;background:none;border:1.5px solid var(--border);border-radius:9px;padding:7px;font-family:'Fredoka One',cursive;font-size:.82rem;color:var(--text2);cursor:pointer}
+.auth-err{font-size:.68rem;color:var(--red);margin-bottom:6px;min-height:16px}
+.auth-toggle{font-size:.68rem;color:var(--text3);margin-top:4px;cursor:pointer;text-decoration:underline}
+
+#toast{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);border-radius:9px;padding:5px 14px;font-size:.72rem;font-weight:700;opacity:0;transition:opacity .3s;z-index:900;pointer-events:none;white-space:nowrap}
+
+/* FIREBASE SETUP NOTICE */
+#setup-notice{position:absolute;inset:0;background:rgba(26,21,0,.97);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#setup-notice h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--lemon);margin-bottom:10px}
+#setup-notice p{font-size:.78rem;color:#C8A84B;line-height:1.6;margin-bottom:12px;max-width:380px}
+#setup-notice code{font-size:.7rem;background:#2C2200;color:#FFD700;border-radius:6px;padding:2px 7px;font-family:monospace}
+#firebase-config-input{width:100%;max-width:400px;background:#231C00;border:1.5px solid #6B5200;border-radius:10px;padding:10px;font-size:.72rem;color:#F5E6A0;font-family:monospace;resize:vertical;min-height:120px;margin-bottom:10px}
+#apply-config-btn{background:var(--lemon);border:none;border-radius:10px;padding:9px 24px;font-family:'Fredoka One',cursive;font-size:1rem;color:#7A5C3A;cursor:pointer}
+#skip-firebase-btn{margin-top:8px;background:none;border:1px solid #4A3800;border-radius:8px;padding:6px 16px;font-size:.72rem;color:#7A6030;cursor:pointer}
 </style>
 </head>
-<body data-theme="light">
+<body data-theme="dark">
 
 <div id="game">
   <div id="left">
     <div id="milestone-wrap"><div id="milestone-banner"></div></div>
-
     <div id="topbar">
       <h1>🍋 Sell Lemons</h1>
-      <button id="theme-btn">🌙 Dark</button>
+      <div style="display:flex;gap:5px;align-items:center">
+        <button class="hbtn" id="auth-btn">👤 Sign In</button>
+        <button class="hbtn" id="theme-btn">☀️ Light</button>
+      </div>
     </div>
+    <div id="auth-status">Not signed in — local save</div>
 
     <div id="money-display">
       <div id="money-label">💰 Total Money</div>
       <div id="money-amount">$0</div>
       <div id="money-per-sec">$0 / sec</div>
     </div>
-
     <div id="click-value">+$1 per click</div>
 
     <div id="clicker-area">
       <div id="lemon-ring"></div>
       <button id="lemon-btn" aria-label="Click or hold to sell lemons">
-        <svg id="lemon-svg" width="150" height="150" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <svg id="lemon-svg" width="145" height="145" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="80" cy="82" rx="58" ry="48" fill="#FFD700" stroke="#E6A800" stroke-width="1.5"/>
           <ellipse cx="80" cy="82" rx="58" ry="48" fill="url(#ls)" opacity="0.5"/>
           <ellipse cx="52" cy="60" rx="14" ry="9" fill="#FFE84D" opacity="0.55" transform="rotate(-20,52,60)"/>
@@ -352,25 +169,19 @@ h1{
           <path d="M14 38 Q10 28 20 24" stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round"/>
           <path d="M136 77 Q144 70 140 60" stroke="#E6A800" stroke-width="2" fill="none" stroke-linecap="round"/>
           <path d="M140 60 Q146 50 138 44" stroke="#4CAF50" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <defs>
-            <radialGradient id="ls" cx="35%" cy="35%" r="55%">
-              <stop offset="0%" stop-color="#fff" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
+          <defs><radialGradient id="ls" cx="35%" cy="35%" r="55%"><stop offset="0%" stop-color="#fff" stop-opacity="0.6"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
         </svg>
       </button>
     </div>
     <div id="hold-hint">Hold to auto-click 🍋</div>
 
-    <div id="stats" style="margin-top:6px">
+    <div id="stats" style="margin-top:5px">
       <div class="stat-pill">Sold: <span id="stat-clicks">0</span></div>
       <div class="stat-pill">Earned: <span id="stat-total">$0</span></div>
       <div class="stat-pill">Prestige: <span id="stat-prestige">0</span>×</div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div id="right">
     <div id="shop-header">
       <h2>🛒 Shop</h2>
@@ -388,26 +199,68 @@ h1{
       <button id="prestige-btn">🌟 Prestige</button>
       <div id="prestige-info">Reach $1M earned to prestige</div>
     </div>
-    <div id="save-bar">💾 Auto-saves every 10s</div>
+    <div id="save-bar">💾 Local save active</div>
   </div>
 </div>
 
-<div id="prestige-modal">
-  <div id="prestige-box">
+<!-- PRESTIGE MODAL -->
+<div class="overlay" id="prestige-modal">
+  <div class="modal-box">
     <h2>🌟 Prestige!</h2>
     <p>Reset everything for a permanent <strong>×1.5 earnings multiplier</strong>. Ready?</p>
     <div class="modal-btns">
-      <button id="cancel-prestige">Not yet</button>
-      <button id="confirm-prestige">Let's go!</button>
+      <button class="btn-cancel" id="cancel-prestige">Not yet</button>
+      <button class="btn-confirm" id="confirm-prestige">Let's go!</button>
     </div>
   </div>
 </div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-modal">
+  <div class="modal-box">
+    <h2 id="auth-title">🍋 Sign In</h2>
+    <p id="auth-desc">Save your progress to the cloud!</p>
+    <input class="auth-input" id="auth-email" type="email" placeholder="Email address">
+    <input class="auth-input" id="auth-pass" type="password" placeholder="Password">
+    <div class="auth-err" id="auth-err"></div>
+    <button class="btn-primary" id="auth-submit">Sign In</button>
+    <button class="btn-secondary" id="auth-close">Cancel</button>
+    <div class="auth-toggle" id="auth-toggle">No account yet? Register</div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
-<script>
-const SAVE_KEY='sell_lemons_v5';
+<!-- FIREBASE SETUP SCREEN -->
+<div id="setup-notice">
+  <h2>🔥 Firebase Setup</h2>
+  <p>Paste your Firebase config object below to enable cloud accounts. You'll get this from the Firebase Console → Project Settings → Your Apps.<br><br>
+  It looks like: <code>{ apiKey: "...", authDomain: "...", projectId: "..." }</code></p>
+  <textarea id="firebase-config-input" placeholder='Paste your firebaseConfig object here, e.g.:
+{
+  apiKey: "AIzaSy...",
+  authDomain: "my-app.firebaseapp.com",
+  projectId: "my-app",
+  storageBucket: "my-app.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123:web:abc"
+}'></textarea>
+  <button id="apply-config-btn">Connect Firebase 🔥</button>
+  <button id="skip-firebase-btn">Skip — play without accounts</button>
+</div>
 
-const UPGRADES=[
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+const LS_KEY = 'sell_lemons_save';
+const LS_CFG = 'sell_lemons_fb_config';
+const LS_THEME = 'sell_lemons_theme';
+const PCOLS = ['#FFD700','#FFB300','#FFF176','#A5D6A7','#66BB6A'];
+
+const UPGRADES = [
   {id:'u1',name:'Better Squeezer',icon:'🍋',desc:'2× click',cost:50,mult:2,type:'click'},
   {id:'u2',name:'Lemon Polish',icon:'✨',desc:'3× click',cost:200,mult:3,type:'click'},
   {id:'u3',name:'Bulk Squeezing',icon:'💪',desc:'5× click',cost:1000,mult:5,type:'click'},
@@ -419,8 +272,7 @@ const UPGRADES=[
   {id:'u9',name:'Premium Recipe',icon:'📋',desc:'8× business',cost:150000,mult:8,type:'biz'},
   {id:'u10',name:'Robot Arms',icon:'🤖',desc:'20× business',cost:2000000,mult:20,type:'biz'},
 ];
-
-const BUILDINGS=[
+const BUILDINGS = [
   {id:'b1',name:'Lemon Stand',icon:'🏪',desc:'Basic street stand',base:0.5,baseCost:15,scale:1.15},
   {id:'b2',name:'Juice Bar',icon:'🥤',desc:'Fresh lemonade',base:3,baseCost:100,scale:1.15},
   {id:'b3',name:'Lemon Farm',icon:'🌾',desc:'Grow your own',base:20,baseCost:1100,scale:1.15},
@@ -430,72 +282,217 @@ const BUILDINGS=[
   {id:'b7',name:'Lemon Portal',icon:'🌀',desc:'Interdimensional',base:10000,baseCost:20000000,scale:1.15},
   {id:'b8',name:'Lemon Planet',icon:'🪐',desc:'A whole planet',base:50000,baseCost:300000000,scale:1.15},
 ];
-
-const MILESTONES=[
+const MILESTONES = [
   {val:1,msg:'First lemon sold! 🍋'},
-  {val:100,msg:'100 lemons! Rolling now!'},
+  {val:100,msg:'100 lemons! Rolling!'},
   {val:1000,msg:'1,000 lemons! Legend!'},
-  {val:10000,msg:'10K lemons! So zesty!'},
+  {val:10000,msg:'10K lemons! Zesty!'},
   {val:100000,msg:'100K lemons! Empire!'},
   {val:1000000,msg:'1 MILLION lemons! 🌟'},
 ];
 
-const PARTICLE_COLORS=['#FFD700','#FFB300','#FFF176','#A5D6A7','#66BB6A'];
+let G = {money:0,totalEarned:0,clicks:0,clickMult:1,bizMult:1,prestige:0,prestigeMult:1,upgrades:{},buildings:{}};
+let seenMilestones = new Set();
+let firebaseReady = false;
+let fbAuth = null, fbDb = null, currentUser = null;
+let authMode = 'signin';
+let cloudSaveTimer = null;
 
-let G={money:0,totalEarned:0,clicks:0,clickMult:1,bizMult:1,prestige:0,prestigeMult:1,upgrades:{},buildings:{},theme:'light'};
-let seenMilestones=new Set();
-let activeTab='upgrades';
-
-function load(){
-  try{const s=localStorage.getItem(SAVE_KEY);if(s){const d=JSON.parse(s);Object.assign(G,d);}}catch(e){}
+/* ── SAVE / LOAD ── */
+function serialize() {
+  return {money:G.money,totalEarned:G.totalEarned,clicks:G.clicks,clickMult:G.clickMult,bizMult:G.bizMult,prestige:G.prestige,prestigeMult:G.prestigeMult,upgrades:G.upgrades,buildings:G.buildings};
 }
-function save(){
-  try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}
-  document.getElementById('save-bar').textContent='💾 Saved '+new Date().toLocaleTimeString();
-}
-
-function fmt(n){
-  if(n>=1e12)return'$'+(n/1e12).toFixed(2)+'T';
-  if(n>=1e9)return'$'+(n/1e9).toFixed(2)+'B';
-  if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';
-  if(n>=1e3)return'$'+(n/1e3).toFixed(1)+'K';
-  return'$'+Math.floor(n).toLocaleString();
-}
-
-function clickVal(){return 1*G.clickMult*G.prestigeMult;}
-function ips(){
-  let t=0;
-  BUILDINGS.forEach(b=>{const c=G.buildings[b.id]||0;if(c>0)t+=b.base*c*G.bizMult*G.prestigeMult;});
-  return t;
-}
-function bCost(b){return Math.floor(b.baseCost*Math.pow(b.scale,G.buildings[b.id]||0));}
-
-function checkMilestones(){
-  MILESTONES.forEach(m=>{
-    if(!seenMilestones.has(m.val)&&G.clicks>=m.val){seenMilestones.add(m.val);showMilestone(m.msg);}
+function deserialize(d) {
+  if(!d) return;
+  Object.assign(G, {
+    money: d.money||0, totalEarned: d.totalEarned||0, clicks: d.clicks||0,
+    clickMult: d.clickMult||1, bizMult: d.bizMult||1,
+    prestige: d.prestige||0, prestigeMult: d.prestigeMult||1,
+    upgrades: d.upgrades||{}, buildings: d.buildings||{}
   });
 }
+function localSave() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(serialize())); } catch(e){}
+  document.getElementById('save-bar').textContent = '💾 Saved locally ' + new Date().toLocaleTimeString();
+}
+function localLoad() {
+  try { const s = localStorage.getItem(LS_KEY); if(s) deserialize(JSON.parse(s)); } catch(e){}
+}
+async function cloudSave() {
+  if(!firebaseReady||!currentUser||!fbDb) return;
+  try {
+    await fbDb.collection('saves').doc(currentUser.uid).set(serialize());
+    document.getElementById('save-bar').textContent = '☁️ Cloud saved ' + new Date().toLocaleTimeString();
+  } catch(e){ console.warn('Cloud save failed',e); }
+}
+async function cloudLoad() {
+  if(!firebaseReady||!currentUser||!fbDb) return;
+  try {
+    const doc = await fbDb.collection('saves').doc(currentUser.uid).get();
+    if(doc.exists) { deserialize(doc.data()); renderMoney(); renderShop(); showToast('☁️ Cloud save loaded!'); }
+    else { cloudSave(); }
+  } catch(e){ console.warn('Cloud load failed',e); }
+}
+function scheduledSave() {
+  localSave();
+  if(currentUser) cloudSave();
+}
 
+/* ── FIREBASE INIT ── */
+function initFirebase(config) {
+  try {
+    if(firebase.apps.length) firebase.apps.forEach(a=>a.delete());
+    firebase.initializeApp(config);
+    fbAuth = firebase.auth();
+    fbDb = firebase.firestore();
+    firebaseReady = true;
+    localStorage.setItem(LS_CFG, JSON.stringify(config));
+
+    fbAuth.onAuthStateChanged(user => {
+      currentUser = user;
+      if(user) {
+        document.getElementById('auth-btn').textContent = '👤 Sign Out';
+        document.getElementById('auth-status').textContent = '☁️ ' + (user.email||'').split('@')[0];
+        cloudLoad();
+      } else {
+        document.getElementById('auth-btn').textContent = '👤 Sign In';
+        document.getElementById('auth-status').textContent = 'Signed out — local save';
+      }
+    });
+    return true;
+  } catch(e) { console.error('Firebase init error',e); return false; }
+}
+
+/* ── FIREBASE SETUP SCREEN ── */
+document.getElementById('apply-config-btn').addEventListener('click', () => {
+  const raw = document.getElementById('firebase-config-input').value.trim();
+  let config;
+  try {
+    // Accept both JS object and JSON
+    const cleaned = raw.replace(/(\w+):/g, '"$1":').replace(/'/g,'"');
+    config = JSON.parse(cleaned);
+  } catch(e) {
+    alert('Could not parse config. Make sure you paste the full config object.');
+    return;
+  }
+  if(!config.apiKey || !config.projectId) {
+    alert('Config looks incomplete — make sure apiKey and projectId are present.');
+    return;
+  }
+  if(initFirebase(config)) {
+    document.getElementById('setup-notice').style.display = 'none';
+    showToast('🔥 Firebase connected!');
+  } else {
+    alert('Firebase failed to init. Double-check your config.');
+  }
+});
+document.getElementById('skip-firebase-btn').addEventListener('click', () => {
+  document.getElementById('setup-notice').style.display = 'none';
+  showToast('Playing without accounts — local save only');
+});
+
+/* ── AUTH MODAL ── */
+function openAuthModal() {
+  if(currentUser) { fbAuth.signOut(); return; }
+  document.getElementById('auth-modal').classList.add('show');
+  authMode = 'signin';
+  updateAuthUI();
+}
+function updateAuthUI() {
+  document.getElementById('auth-title').textContent = authMode==='signin'?'🍋 Sign In':'🍋 Register';
+  document.getElementById('auth-desc').textContent = authMode==='signin'?'Load your cloud save!':'Create your lemon account!';
+  document.getElementById('auth-submit').textContent = authMode==='signin'?'Sign In':'Create Account';
+  document.getElementById('auth-toggle').textContent = authMode==='signin'?'No account? Register':'Have an account? Sign In';
+  document.getElementById('auth-err').textContent = '';
+}
+document.getElementById('auth-toggle').addEventListener('click', () => {
+  authMode = authMode==='signin'?'register':'signin';
+  updateAuthUI();
+});
+document.getElementById('auth-close').addEventListener('click', () => document.getElementById('auth-modal').classList.remove('show'));
+document.getElementById('auth-btn').addEventListener('click', openAuthModal);
+document.getElementById('auth-submit').addEventListener('click', async () => {
+  if(!firebaseReady){ showToast('Firebase not set up!'); return; }
+  const email = document.getElementById('auth-email').value.trim();
+  const pass = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-err');
+  errEl.textContent = '';
+  if(!email||!pass){ errEl.textContent='Enter email and password.'; return; }
+  try {
+    if(authMode==='signin') await fbAuth.signInWithEmailAndPassword(email, pass);
+    else await fbAuth.createUserWithEmailAndPassword(email, pass);
+    document.getElementById('auth-modal').classList.remove('show');
+    showToast(authMode==='signin'?'Welcome back! ☁️':'Account created! 🍋');
+  } catch(e) {
+    const msgs = {
+      'auth/user-not-found':'No account with that email.',
+      'auth/wrong-password':'Wrong password.',
+      'auth/email-already-in-use':'Email already registered.',
+      'auth/weak-password':'Password must be 6+ characters.',
+      'auth/invalid-email':'Invalid email address.',
+    };
+    errEl.textContent = msgs[e.code]||e.message;
+  }
+});
+
+/* ── THEME ── */
+function applyTheme(t) {
+  document.body.setAttribute('data-theme', t);
+  document.getElementById('theme-btn').textContent = t==='dark'?'☀️ Light':'🌙 Dark';
+  try{ localStorage.setItem(LS_THEME, t); }catch(e){}
+}
+document.getElementById('theme-btn').addEventListener('click', () => {
+  applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark');
+});
+
+/* ── TABS ── */
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('visible'));
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('visible');
+  });
+});
+
+/* ── GAME LOGIC ── */
+function fmt(n) {
+  if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9)  return '$'+(n/1e9).toFixed(2)+'B';
+  if(n>=1e6)  return '$'+(n/1e6).toFixed(2)+'M';
+  if(n>=1e3)  return '$'+(n/1e3).toFixed(1)+'K';
+  return '$'+Math.floor(n).toLocaleString();
+}
+function clickVal()  { return 1 * G.clickMult * G.prestigeMult; }
+function ips() {
+  let t=0;
+  BUILDINGS.forEach(b=>{ const c=G.buildings[b.id]||0; if(c>0) t+=b.base*c*G.bizMult*G.prestigeMult; });
+  return t;
+}
+function bCost(b) { return Math.floor(b.baseCost * Math.pow(b.scale, G.buildings[b.id]||0)); }
+
+function checkMilestones() {
+  MILESTONES.forEach(m=>{ if(!seenMilestones.has(m.val)&&G.clicks>=m.val){ seenMilestones.add(m.val); showMilestone(m.msg); } });
+}
 let mTimer=null;
-function showMilestone(msg){
+function showMilestone(msg) {
   const el=document.getElementById('milestone-banner');
-  el.textContent=msg;el.style.opacity='1';
-  if(mTimer)clearTimeout(mTimer);
+  el.textContent=msg; el.style.opacity='1';
+  if(mTimer) clearTimeout(mTimer);
   mTimer=setTimeout(()=>el.style.opacity='0',2800);
 }
-
 let tTimer=null;
-function showToast(msg){
+function showToast(msg) {
   const el=document.getElementById('toast');
-  el.textContent=msg;el.style.opacity='1';
-  if(tTimer)clearTimeout(tTimer);
-  tTimer=setTimeout(()=>el.style.opacity='0',1800);
+  el.textContent=msg; el.style.opacity='1';
+  if(tTimer) clearTimeout(tTimer);
+  tTimer=setTimeout(()=>el.style.opacity='0',2000);
 }
 
-function renderMoney(){
+function renderMoney() {
   const am=document.getElementById('money-amount');
   am.textContent=fmt(G.money);
-  am.classList.remove('pop');void am.offsetWidth;am.classList.add('pop');
+  am.classList.remove('pop'); void am.offsetWidth; am.classList.add('pop');
   document.getElementById('money-per-sec').textContent=fmt(ips())+' / sec';
   document.getElementById('click-value').textContent='+'+fmt(clickVal())+' per click';
   document.getElementById('stat-clicks').textContent=G.clicks.toLocaleString();
@@ -505,182 +502,133 @@ function renderMoney(){
   document.getElementById('prestige-btn').className=ready?'ready':'';
   document.getElementById('prestige-info').textContent=ready?'Ready! +×1.5 forever 🌟':'Need '+fmt(Math.max(0,1000000-G.totalEarned))+' more';
 }
-
-function renderShop(){
-  // UPGRADES
-  const ul=document.getElementById('tab-upgrades');
-  ul.innerHTML='';
+function renderShop() {
+  const ul=document.getElementById('tab-upgrades'); ul.innerHTML='';
   UPGRADES.forEach(u=>{
-    const owned=G.upgrades[u.id];
-    const can=G.money>=u.cost;
+    const owned=G.upgrades[u.id]; const can=G.money>=u.cost;
     const d=document.createElement('div');
     d.className='shop-item'+(owned?' locked':(can?' affordable':''));
-    d.innerHTML=`<div class="item-icon">${u.icon}</div>
-      <div class="item-info"><div class="item-name">${u.name}</div><div class="item-desc">${u.desc}</div></div>
-      <div class="item-right">${owned?'<span class="item-owned">✓</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;
-    if(!owned)d.onclick=()=>buyUpgrade(u);
+    d.innerHTML=`<div class="item-icon">${u.icon}</div><div class="item-info"><div class="item-name">${u.name}</div><div class="item-desc">${u.desc}</div></div><div class="item-right">${owned?'<span class="item-owned">✓</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;
+    if(!owned) d.onclick=()=>buyUpgrade(u);
     ul.appendChild(d);
   });
-  // BUILDINGS
-  const bl=document.getElementById('tab-buildings');
-  bl.innerHTML='';
+  const bl=document.getElementById('tab-buildings'); bl.innerHTML='';
   BUILDINGS.forEach(b=>{
-    const cnt=G.buildings[b.id]||0;
-    const cost=bCost(b);
-    const can=G.money>=cost;
+    const cnt=G.buildings[b.id]||0; const cost=bCost(b); const can=G.money>=cost;
     const income=cnt>0?fmt(b.base*cnt*G.bizMult*G.prestigeMult)+'/s':b.desc;
     const d=document.createElement('div');
     d.className='shop-item'+(can?' affordable':'');
-    d.innerHTML=`<div class="item-icon">${b.icon}</div>
-      <div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${income}</div></div>
-      <div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'×'+cnt:''}</div></div>`;
+    d.innerHTML=`<div class="item-icon">${b.icon}</div><div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${income}</div></div><div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'×'+cnt:''}</div></div>`;
     d.onclick=()=>buyBuilding(b);
     bl.appendChild(d);
   });
 }
-
-function buyUpgrade(u){
-  if(G.upgrades[u.id]||G.money<u.cost)return;
-  G.money-=u.cost;G.upgrades[u.id]=true;
-  if(u.type==='click')G.clickMult*=u.mult;else G.bizMult*=u.mult;
+function buyUpgrade(u) {
+  if(G.upgrades[u.id]||G.money<u.cost) return;
+  G.money-=u.cost; G.upgrades[u.id]=true;
+  if(u.type==='click') G.clickMult*=u.mult; else G.bizMult*=u.mult;
   showToast('✨ '+u.name+' unlocked!');
-  renderShop();renderMoney();
+  renderShop(); renderMoney();
 }
-function buyBuilding(b){
+function buyBuilding(b) {
   const cost=bCost(b);
-  if(G.money<cost){showToast('Not enough!');return;}
-  G.money-=cost;G.buildings[b.id]=(G.buildings[b.id]||0)+1;
-  renderShop();renderMoney();
+  if(G.money<cost){ showToast('Not enough!'); return; }
+  G.money-=cost; G.buildings[b.id]=(G.buildings[b.id]||0)+1;
+  renderShop(); renderMoney();
 }
-function doPrestige(){
-  G.prestige++;G.prestigeMult=Math.pow(1.5,G.prestige);
-  G.money=0;G.clicks=0;G.totalEarned=0;G.clickMult=1;G.bizMult=1;G.upgrades={};G.buildings={};
+function doPrestige() {
+  G.prestige++; G.prestigeMult=Math.pow(1.5,G.prestige);
+  G.money=0; G.clicks=0; G.totalEarned=0; G.clickMult=1; G.bizMult=1; G.upgrades={}; G.buildings={};
   seenMilestones=new Set();
-  save();renderShop();renderMoney();
+  scheduledSave(); renderShop(); renderMoney();
   showMilestone('🌟 Prestiged! ×'+G.prestigeMult.toFixed(1)+' active!');
 }
 
-// THEME
-function applyTheme(t){
-  G.theme=t;
-  document.body.setAttribute('data-theme',t);
-  document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Light':'🌙 Dark';
-}
-document.getElementById('theme-btn').addEventListener('click',()=>{
-  applyTheme(G.theme==='dark'?'light':'dark');
-  save();
-});
+document.getElementById('prestige-btn').addEventListener('click',()=>{ if(G.totalEarned<1000000) return; document.getElementById('prestige-modal').classList.add('show'); });
+document.getElementById('cancel-prestige').addEventListener('click',()=>document.getElementById('prestige-modal').classList.remove('show'));
+document.getElementById('confirm-prestige').addEventListener('click',()=>{ document.getElementById('prestige-modal').classList.remove('show'); doPrestige(); });
 
-// TABS
-document.querySelectorAll('.tab').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    activeTab=btn.dataset.tab;
-    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('visible'));
-    document.getElementById('tab-'+activeTab).classList.add('visible');
-  });
-});
-
-// PARTICLES
-function spawnParticles(x,y){
-  const count=6;
-  for(let i=0;i<count;i++){
-    const el=document.createElement('div');
-    el.className='particle';
-    const angle=(i/count)*Math.PI*2;
-    const dist=30+Math.random()*30;
-    const dx=Math.cos(angle)*dist+'px';
-    const dy=Math.sin(angle)*dist+'px';
-    const sz=4+Math.random()*5;
-    el.style.cssText=`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${PARTICLE_COLORS[Math.floor(Math.random()*PARTICLE_COLORS.length)]};--dx:${dx};--dy:${dy};animation-duration:${0.5+Math.random()*0.3}s`;
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),900);
+/* ── PARTICLES / FLOATS ── */
+function spawnParticles(x,y) {
+  for(let i=0;i<6;i++){
+    const el=document.createElement('div'); el.className='particle';
+    const a=(i/6)*Math.PI*2; const dist=28+Math.random()*28;
+    el.style.cssText=`left:${x}px;top:${y}px;width:${4+Math.random()*5}px;height:${4+Math.random()*5}px;background:${PCOLS[Math.floor(Math.random()*PCOLS.length)]};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;animation-duration:${.5+Math.random()*.3}s`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),900);
   }
 }
-
 let floatThrottle=0;
-function spawnFloat(x,y,val){
-  const now=Date.now();
-  if(now-floatThrottle<100)return;
-  floatThrottle=now;
-  const el=document.createElement('div');
-  el.className='float-num';
-  el.textContent='+'+fmt(val);
-  el.style.left=(x-20)+'px';el.style.top=(y-10)+'px';
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),900);
+function spawnFloat(x,y,val) {
+  const now=Date.now(); if(now-floatThrottle<100) return; floatThrottle=now;
+  const el=document.createElement('div'); el.className='float-num';
+  el.textContent='+'+fmt(val); el.style.left=(x-20)+'px'; el.style.top=(y-10)+'px';
+  document.body.appendChild(el); setTimeout(()=>el.remove(),900);
 }
 
-// CLICK / HOLD
-const btn=document.getElementById('lemon-btn');
-const ring=document.getElementById('lemon-ring');
-const hint=document.getElementById('hold-hint');
-let isHolding=false,holdInterval=null,holdTimer=null;
-let lastPos={x:0,y:0};
-const AUTO_CPS=8,HOLD_DELAY=400;
-
-function doClick(x,y){
-  const val=clickVal();
-  G.money+=val;G.totalEarned+=val;G.clicks++;
-  checkMilestones();
-  spawnFloat(x||lastPos.x,y||lastPos.y,val);
-  spawnParticles(x||lastPos.x,y||lastPos.y);
-  renderMoney();
-  if(G.clicks%15===0)renderShop();
+/* ── CLICK / HOLD ── */
+const lbtn=document.getElementById('lemon-btn'), ring=document.getElementById('lemon-ring'), hint=document.getElementById('hold-hint');
+let isHolding=false, holdInterval=null, holdTimer=null, lastPos={x:0,y:0};
+function doClick(x,y) {
+  const val=clickVal(); G.money+=val; G.totalEarned+=val; G.clicks++;
+  checkMilestones(); spawnFloat(x||lastPos.x,y||lastPos.y,val); spawnParticles(x||lastPos.x,y||lastPos.y);
+  renderMoney(); if(G.clicks%15===0) renderShop();
 }
-
-function startHold(x,y){
-  if(isHolding)return;
-  isHolding=true;lastPos={x,y};
-  btn.classList.add('pressed');
-  doClick(x,y);
+function startHold(x,y) {
+  if(isHolding) return; isHolding=true; lastPos={x,y};
+  lbtn.classList.add('pressed'); doClick(x,y);
   holdTimer=setTimeout(()=>{
-    btn.classList.remove('pressed');btn.classList.add('holding');
-    ring.classList.add('active');
-    hint.classList.add('active');hint.textContent='Auto-clicking! 🍋🍋🍋';
-    holdInterval=setInterval(()=>doClick(lastPos.x,lastPos.y),1000/AUTO_CPS);
-  },HOLD_DELAY);
+    lbtn.classList.remove('pressed'); lbtn.classList.add('holding');
+    ring.classList.add('active'); hint.classList.add('active'); hint.textContent='Auto-clicking! 🍋🍋🍋';
+    holdInterval=setInterval(()=>doClick(lastPos.x,lastPos.y),125);
+  },400);
 }
-function endHold(){
-  if(!isHolding)return;
-  isHolding=false;
-  clearTimeout(holdTimer);clearInterval(holdInterval);holdInterval=null;
-  btn.classList.remove('pressed','holding');
-  ring.classList.remove('active');
-  hint.classList.remove('active');hint.textContent='Hold to auto-click 🍋';
+function endHold() {
+  if(!isHolding) return; isHolding=false;
+  clearTimeout(holdTimer); clearInterval(holdInterval); holdInterval=null;
+  lbtn.classList.remove('pressed','holding'); ring.classList.remove('active');
+  hint.classList.remove('active'); hint.textContent='Hold to auto-click 🍋';
 }
-
-btn.addEventListener('mousedown',e=>{e.preventDefault();startHold(e.clientX,e.clientY);});
+lbtn.addEventListener('mousedown',e=>{e.preventDefault();startHold(e.clientX,e.clientY);});
 document.addEventListener('mouseup',()=>{if(isHolding)endHold();});
-btn.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];startHold(t.clientX,t.clientY);},{passive:false});
+lbtn.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];startHold(t.clientX,t.clientY);},{passive:false});
 document.addEventListener('touchend',()=>{if(isHolding)endHold();});
 document.addEventListener('touchcancel',()=>{if(isHolding)endHold();});
-btn.addEventListener('mousemove',e=>{lastPos={x:e.clientX,y:e.clientY};});
+lbtn.addEventListener('mousemove',e=>{lastPos={x:e.clientX,y:e.clientY};});
 
-document.getElementById('prestige-btn').addEventListener('click',()=>{
-  if(G.totalEarned<1000000)return;
-  document.getElementById('prestige-modal').classList.add('show');
-});
-document.getElementById('cancel-prestige').addEventListener('click',()=>document.getElementById('prestige-modal').classList.remove('show'));
-document.getElementById('confirm-prestige').addEventListener('click',()=>{
-  document.getElementById('prestige-modal').classList.remove('show');doPrestige();
-});
-
-// GAME LOOP
+/* ── GAME LOOP ── */
 let lastTick=Date.now();
-function tick(){
-  const now=Date.now();const dt=(now-lastTick)/1000;lastTick=now;
+function tick() {
+  const now=Date.now(); const dt=(now-lastTick)/1000; lastTick=now;
   const income=ips()*dt;
-  if(income>0){G.money+=income;G.totalEarned+=income;checkMilestones();renderMoney();}
-  if(Math.random()<0.04)renderShop();
+  if(income>0){ G.money+=income; G.totalEarned+=income; checkMilestones(); renderMoney(); }
+  if(Math.random()<0.04) renderShop();
   requestAnimationFrame(tick);
 }
 
-setInterval(save,10000);
-load();
-applyTheme(G.theme||'light');
-renderMoney();renderShop();tick();
+/* ── INIT ── */
+(function init(){
+  // Load theme
+  const savedTheme = localStorage.getItem(LS_THEME)||'dark';
+  applyTheme(savedTheme);
+  // Load local save first (always)
+  localLoad();
+  renderMoney(); renderShop();
+  // Try to restore firebase config
+  try {
+    const cfg = localStorage.getItem(LS_CFG);
+    if(cfg) {
+      const parsed = JSON.parse(cfg);
+      if(parsed.apiKey) {
+        if(initFirebase(parsed)) {
+          document.getElementById('setup-notice').style.display='none';
+        }
+      }
+    }
+  } catch(e){}
+  // Auto-save every 15s
+  setInterval(scheduledSave, 15000);
+  tick();
+})();
 </script>
 </body>
 </html>
