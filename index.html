@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sell Lemons</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -19,49 +18,58 @@
   body{font-family:'Nunito',sans-serif;background:linear-gradient(160deg,#FFFDE7 0%,#FFF3CD 50%,#FFFDE7 100%);min-height:100vh;color:var(--text);overflow-x:hidden}
   #game{display:grid;grid-template-columns:1fr 280px;min-height:100vh;max-width:900px;margin:0 auto;gap:0}
 
-  /* LEFT PANEL */
   #left{display:flex;flex-direction:column;align-items:center;padding:20px 10px;position:relative}
   #header{text-align:center;margin-bottom:8px}
   h1{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--lemon-deep);text-shadow:2px 2px 0 #fff,3px 3px 0 var(--lemon);letter-spacing:1px}
   #tagline{font-size:0.8rem;color:var(--text2);font-weight:600;margin-top:-4px}
 
-  /* MONEY DISPLAY */
   #money-display{background:var(--card);border:2px solid var(--lemon);border-radius:16px;padding:10px 24px;text-align:center;margin-bottom:8px;box-shadow:0 4px 0 var(--lemon-dark),0 6px 12px var(--shadow)}
   #money-label{font-size:0.72rem;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
   #money-amount{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--green-dark);line-height:1}
   #money-per-sec{font-size:0.72rem;color:var(--text3);font-weight:600}
 
-  /* LEMON CLICK AREA */
-  #clicker-area{position:relative;display:flex;align-items:center;justify-content:center;width:220px;height:220px;margin:8px 0}
+  #clicker-area{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:220px;height:240px;margin:8px 0}
+  #hold-hint{font-size:0.7rem;color:var(--text3);font-weight:700;margin-top:4px;transition:opacity 0.3s;letter-spacing:0.3px}
+  #hold-hint.active{color:var(--green-dark);opacity:1}
+
   #lemon-btn{
     background:none;border:none;cursor:pointer;
     width:180px;height:180px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
     position:relative;z-index:2;
-    transition:transform 0.08s ease;
     -webkit-tap-highlight-color:transparent;
     outline:none;
+    user-select:none;
+    -webkit-user-select:none;
   }
-  #lemon-btn:active{transform:scale(0.88)}
-  #lemon-svg{filter:drop-shadow(0 8px 0 var(--lemon-dark)) drop-shadow(0 0 20px rgba(255,200,0,0.4));transition:filter 0.1s}
-  #lemon-btn:active #lemon-svg{filter:drop-shadow(0 2px 0 var(--lemon-dark)) drop-shadow(0 0 30px rgba(255,220,0,0.7));transform:scale(0.92)}
-  #click-glow{position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,215,0,0.3) 0%,transparent 70%);pointer-events:none;opacity:0;transition:opacity 0.3s}
+  #lemon-svg{
+    filter:drop-shadow(0 8px 0 var(--lemon-dark)) drop-shadow(0 0 20px rgba(255,200,0,0.4));
+    transition:transform 0.08s ease, filter 0.08s ease;
+    transform-origin:center;
+  }
+  #lemon-btn.pressed #lemon-svg{
+    filter:drop-shadow(0 2px 0 var(--lemon-dark)) drop-shadow(0 0 30px rgba(255,220,0,0.7));
+    transform:scale(0.88) translateY(6px);
+  }
+  #lemon-btn.holding #lemon-svg{
+    animation:holdBounce 0.18s ease infinite alternate;
+  }
+  @keyframes holdBounce{
+    0%{transform:scale(0.90) translateY(4px)}
+    100%{transform:scale(0.94) translateY(2px)}
+  }
 
   #click-value{font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--green-dark);background:#fff;border:2px solid var(--green);border-radius:8px;padding:2px 10px;margin-bottom:6px;box-shadow:0 2px 0 var(--green-dark)}
 
-  /* FLOATING NUMBERS */
   .float-num{position:fixed;pointer-events:none;font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--green-dark);text-shadow:1px 1px 0 #fff,2px 2px 0 rgba(0,0,0,0.1);animation:floatUp 1s ease-out forwards;z-index:9999}
   @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-90px) scale(1.3)}}
 
-  /* MILESTONES */
   #milestone-banner{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--lemon);border:3px solid var(--lemon-deep);border-radius:14px;padding:10px 24px;font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--lemon-deep);box-shadow:0 4px 20px rgba(180,120,0,0.35);z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;text-align:center;white-space:nowrap}
 
-  /* STATS */
   #stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:4px}
   .stat-pill{background:#fff;border:1.5px solid var(--lemon);border-radius:20px;padding:3px 10px;font-size:0.7rem;font-weight:700;color:var(--text2)}
   .stat-pill span{color:var(--green-dark)}
 
-  /* RIGHT PANEL - SHOP */
   #right{background:#FFFEF0;border-left:2px solid #FFE082;overflow-y:auto;display:flex;flex-direction:column}
   #shop-header{padding:14px 14px 6px;border-bottom:1.5px solid #FFE082}
   #shop-header h2{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--lemon-deep)}
@@ -69,7 +77,6 @@
 
   #upgrades-section h3,#buildings-section h3{font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--text2);padding:8px 14px 2px;border-bottom:1px solid #FFE082;letter-spacing:0.5px}
 
-  /* SHOP ITEMS */
   .shop-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;transition:background 0.12s;border-bottom:1px solid #FFF3CD;position:relative}
   .shop-item:hover{background:#FFF8DC}
   .shop-item.affordable{background:#F0FFF0}
@@ -84,31 +91,14 @@
   .item-count{font-size:0.68rem;color:var(--text3)}
   .item-owned{font-size:0.68rem;background:var(--green);color:#fff;border-radius:10px;padding:1px 6px;display:inline-block}
 
-  /* PRESTIGE */
   #prestige-section{padding:10px 14px;border-top:1.5px solid #FFE082;margin-top:auto}
   #prestige-btn{width:100%;background:linear-gradient(135deg,#FF6B35,#FF8C42);border:none;border-radius:10px;color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;padding:10px;cursor:pointer;box-shadow:0 3px 0 #CC4400;transition:transform 0.1s,box-shadow 0.1s;opacity:0.5}
   #prestige-btn.ready{opacity:1}
   #prestige-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #CC4400}
   #prestige-info{font-size:0.68rem;color:var(--text3);margin-top:4px;text-align:center}
 
-  /* SAVE INDICATOR */
   #save-bar{font-size:0.65rem;color:var(--text3);text-align:center;padding:4px;border-top:1px solid #FFE082}
 
-  /* ANIMATIONS */
-  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-  .item-flash{animation:itemFlash 0.4s ease}
-  @keyframes itemFlash{0%{background:#FFD700}100%{background:transparent}}
-
-  /* LEMON PULSE */
-  #lemon-btn.pulsing #lemon-svg{animation:lemonPulse 0.15s ease}
-  @keyframes lemonPulse{0%{transform:scale(1)}50%{transform:scale(0.88)}100%{transform:scale(1)}}
-
-  /* SCROLLBAR */
-  #right::-webkit-scrollbar{width:4px}
-  #right::-webkit-scrollbar-track{background:#FFFEF0}
-  #right::-webkit-scrollbar-thumb{background:#FFE082;border-radius:4px}
-
-  /* MODAL */
   #prestige-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:none;align-items:center;justify-content:center}
   #prestige-modal.show{display:flex}
   #prestige-box{background:#FFFDE7;border:3px solid var(--lemon);border-radius:20px;padding:28px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
@@ -119,12 +109,14 @@
   #confirm-prestige{background:linear-gradient(135deg,#FF6B35,#FF8C42);color:#fff;box-shadow:0 3px 0 #CC4400}
   #cancel-prestige{background:#fff;color:var(--text2);border:2px solid #FFE082}
 
-  /* NOTIFICATION TOAST */
   #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;border-radius:10px;padding:8px 18px;font-size:0.8rem;font-weight:600;opacity:0;transition:opacity 0.3s;z-index:9999;pointer-events:none;white-space:nowrap}
 
-  /* CLOUDS (ambient) */
   .cloud{position:fixed;opacity:0.06;font-size:4rem;pointer-events:none;animation:cloudDrift linear infinite}
   @keyframes cloudDrift{0%{transform:translateX(-120px)}100%{transform:translateX(calc(100vw + 120px))}}
+
+  #right::-webkit-scrollbar{width:4px}
+  #right::-webkit-scrollbar-track{background:#FFFEF0}
+  #right::-webkit-scrollbar-thumb{background:#FFE082;border-radius:4px}
 </style>
 </head>
 <body>
@@ -142,15 +134,14 @@
 
     <div id="money-display">
       <div id="money-label">💰 Total Earnings</div>
-      <div id="money-amount">$0.00</div>
+      <div id="money-amount">$0</div>
       <div id="money-per-sec">$0.00 / sec</div>
     </div>
 
-    <div id="click-value">+$0.01 per click</div>
+    <div id="click-value">+$1 per click</div>
 
     <div id="clicker-area">
-      <div id="click-glow"></div>
-      <button id="lemon-btn" aria-label="Click to sell a lemon">
+      <button id="lemon-btn" aria-label="Click or hold to sell lemons">
         <svg id="lemon-svg" width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="80" cy="80" rx="58" ry="48" fill="#FFD700" stroke="#E6A800" stroke-width="2"/>
           <ellipse cx="80" cy="80" rx="58" ry="48" fill="url(#lemonShine)" opacity="0.5"/>
@@ -170,11 +161,12 @@
           </defs>
         </svg>
       </button>
+      <div id="hold-hint">Hold to auto-click 🍋</div>
     </div>
 
     <div id="stats">
       <div class="stat-pill">Lemons sold: <span id="stat-clicks">0</span></div>
-      <div class="stat-pill">All-time: <span id="stat-total">$0.00</span></div>
+      <div class="stat-pill">All-time: <span id="stat-total">$0</span></div>
       <div class="stat-pill">Prestige: <span id="stat-prestige">0</span>x</div>
     </div>
   </div>
@@ -214,30 +206,30 @@
 <div id="toast"></div>
 
 <script>
-const SAVE_KEY = 'sell_lemons_v3';
+const SAVE_KEY = 'sell_lemons_v4';
 
 const UPGRADES = [
-  {id:'u1',name:'Better Squeezer',icon:'🍋',desc:'2× click value',cost:50,mult:2,type:'click',req:0},
-  {id:'u2',name:'Lemon Polish',icon:'✨',desc:'Lemons look fancy (+3× click)',cost:200,mult:3,type:'click',req:0},
-  {id:'u3',name:'Bulk Squeezing',icon:'💪',desc:'5× click value',cost:1000,mult:5,type:'click',req:50},
-  {id:'u4',name:'Lemon Press 3000',icon:'⚙️',desc:'10× click value',cost:8000,mult:10,type:'click',req:200},
-  {id:'u5',name:'Golden Lemon',icon:'🌟',desc:'50× click value',cost:100000,mult:50,type:'click',req:2000},
-  {id:'u6',name:'Street Cart Wheels',icon:'🛒',desc:'2× all business income',cost:500,mult:2,type:'biz',req:0},
-  {id:'u7',name:'Shade Umbrella',icon:'☂️',desc:'3× all business income',cost:3000,mult:3,type:'biz',req:100},
-  {id:'u8',name:'Marketing Flyers',icon:'📄',desc:'5× all business income',cost:20000,mult:5,type:'biz',req:500},
-  {id:'u9',name:'Premium Recipe',icon:'📋',desc:'8× all business income',cost:150000,mult:8,type:'biz',req:5000},
-  {id:'u10',name:'Robot Lemon Arms',icon:'🤖',desc:'20× all business income',cost:2000000,mult:20,type:'biz',req:50000},
+  {id:'u1',name:'Better Squeezer',icon:'🍋',desc:'2× click value',cost:50,mult:2,type:'click'},
+  {id:'u2',name:'Lemon Polish',icon:'✨',desc:'3× click value',cost:200,mult:3,type:'click'},
+  {id:'u3',name:'Bulk Squeezing',icon:'💪',desc:'5× click value',cost:1000,mult:5,type:'click'},
+  {id:'u4',name:'Lemon Press 3000',icon:'⚙️',desc:'10× click value',cost:8000,mult:10,type:'click'},
+  {id:'u5',name:'Golden Lemon',icon:'🌟',desc:'50× click value',cost:100000,mult:50,type:'click'},
+  {id:'u6',name:'Street Cart Wheels',icon:'🛒',desc:'2× all business income',cost:500,mult:2,type:'biz'},
+  {id:'u7',name:'Shade Umbrella',icon:'☂️',desc:'3× all business income',cost:3000,mult:3,type:'biz'},
+  {id:'u8',name:'Marketing Flyers',icon:'📄',desc:'5× all business income',cost:20000,mult:5,type:'biz'},
+  {id:'u9',name:'Premium Recipe',icon:'📋',desc:'8× all business income',cost:150000,mult:8,type:'biz'},
+  {id:'u10',name:'Robot Lemon Arms',icon:'🤖',desc:'20× all business income',cost:2000000,mult:20,type:'biz'},
 ];
 
 const BUILDINGS = [
-  {id:'b1',name:'Lemon Stand',icon:'🏪',desc:'Basic street stand',base:0.1,baseCost:15,scale:1.15},
-  {id:'b2',name:'Juice Bar',icon:'🥤',desc:'Fresh lemonade shop',base:0.5,baseCost:100,scale:1.15},
-  {id:'b3',name:'Lemon Farm',icon:'🌾',desc:'Grow your own lemons',base:4,baseCost:1100,scale:1.15},
-  {id:'b4',name:'Lemon Factory',icon:'🏭',desc:'Industrial-scale squeezing',base:20,baseCost:12000,scale:1.15},
-  {id:'b5',name:'Lemon Mine',icon:'⛏️',desc:'Mining lemon gold',base:100,baseCost:130000,scale:1.15},
-  {id:'b6',name:'Lemon Lab',icon:'🔬',desc:'Scientific lemon research',base:400,baseCost:1400000,scale:1.15},
-  {id:'b7',name:'Lemon Portal',icon:'🌀',desc:'Lemons from another dimension',base:2000,baseCost:20000000,scale:1.15},
-  {id:'b8',name:'Lemon Planet',icon:'🪐',desc:'Entire planet of lemons',base:10000,baseCost:300000000,scale:1.15},
+  {id:'b1',name:'Lemon Stand',icon:'🏪',desc:'Basic street stand',base:0.5,baseCost:15,scale:1.15},
+  {id:'b2',name:'Juice Bar',icon:'🥤',desc:'Fresh lemonade shop',base:3,baseCost:100,scale:1.15},
+  {id:'b3',name:'Lemon Farm',icon:'🌾',desc:'Grow your own lemons',base:20,baseCost:1100,scale:1.15},
+  {id:'b4',name:'Lemon Factory',icon:'🏭',desc:'Industrial-scale squeezing',base:100,baseCost:12000,scale:1.15},
+  {id:'b5',name:'Lemon Mine',icon:'⛏️',desc:'Mining lemon gold',base:500,baseCost:130000,scale:1.15},
+  {id:'b6',name:'Lemon Lab',icon:'🔬',desc:'Scientific lemon research',base:2000,baseCost:1400000,scale:1.15},
+  {id:'b7',name:'Lemon Portal',icon:'🌀',desc:'Lemons from another dimension',base:10000,baseCost:20000000,scale:1.15},
+  {id:'b8',name:'Lemon Planet',icon:'🪐',desc:'Entire planet of lemons',base:50000,baseCost:300000000,scale:1.15},
 ];
 
 const MILESTONES = [
@@ -250,229 +242,221 @@ const MILESTONES = [
 ];
 
 let G = {
-  money: 0, totalEarned: 0, clicks: 0,
-  clickMult: 1, bizMult: 1,
-  prestige: 0, prestigeMult: 1,
-  upgrades: {}, buildings: {},
+  money:0, totalEarned:0, clicks:0,
+  clickMult:1, bizMult:1,
+  prestige:0, prestigeMult:1,
+  upgrades:{}, buildings:{},
 };
 
-function loadGame() {
-  try {
-    const s = localStorage.getItem(SAVE_KEY);
-    if(s) { const d = JSON.parse(s); Object.assign(G, d); }
-  } catch(e) {}
+function loadGame(){
+  try{ const s=localStorage.getItem(SAVE_KEY); if(s){const d=JSON.parse(s);Object.assign(G,d);} }catch(e){}
+}
+function saveGame(){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}
+  document.getElementById('save-bar').textContent='💾 Saved at '+new Date().toLocaleTimeString();
 }
 
-function saveGame() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(G)); } catch(e) {}
-  document.getElementById('save-bar').textContent = '💾 Saved at ' + new Date().toLocaleTimeString();
+function fmt(n){
+  if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9)  return '$'+(n/1e9).toFixed(2)+'B';
+  if(n>=1e6)  return '$'+(n/1e6).toFixed(2)+'M';
+  if(n>=1e3)  return '$'+(n/1e3).toFixed(2)+'K';
+  return '$'+Math.floor(n).toLocaleString();
 }
 
-function fmt(n) {
-  if(n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
-  if(n >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
-  if(n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
-  if(n >= 1e3) return '$' + (n/1e3).toFixed(2) + 'K';
-  return '$' + n.toFixed(2);
+function clickValue(){ return 1 * G.clickMult * G.prestigeMult; }
+function incomePerSec(){
+  let t=0;
+  BUILDINGS.forEach(b=>{ const c=G.buildings[b.id]||0; if(c>0) t+=b.base*c*G.bizMult*G.prestigeMult; });
+  return t;
+}
+function buildingCost(b){ return Math.floor(b.baseCost*Math.pow(b.scale,G.buildings[b.id]||0)); }
+
+let seenMilestones=new Set();
+function checkMilestones(){
+  MILESTONES.forEach(m=>{ if(!seenMilestones.has(m.val)&&G.clicks>=m.val){ seenMilestones.add(m.val); showMilestone(m.msg); } });
+}
+function showMilestone(msg){
+  const el=document.getElementById('milestone-banner');
+  el.textContent=msg; el.style.opacity='1';
+  setTimeout(()=>el.style.opacity='0',3000);
+}
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.style.opacity='1';
+  setTimeout(()=>el.style.opacity='0',2000);
 }
 
-function clickValue() {
-  return 0.01 * G.clickMult * G.prestigeMult;
-}
-
-function incomePerSec() {
-  let total = 0;
-  BUILDINGS.forEach(b => {
-    const cnt = G.buildings[b.id] || 0;
-    if(cnt > 0) total += b.base * cnt * G.bizMult * G.prestigeMult;
-  });
-  return total;
-}
-
-function buildingCost(b) {
-  const cnt = G.buildings[b.id] || 0;
-  return Math.floor(b.baseCost * Math.pow(b.scale, cnt));
-}
-
-let seenMilestones = new Set();
-function checkMilestones() {
-  MILESTONES.forEach(m => {
-    if(!seenMilestones.has(m.val) && G.clicks >= m.val) {
-      seenMilestones.add(m.val);
-      showMilestone(m.msg);
-    }
-  });
-}
-
-function showMilestone(msg) {
-  const el = document.getElementById('milestone-banner');
-  el.textContent = msg;
-  el.style.opacity = '1';
-  setTimeout(() => el.style.opacity = '0', 3000);
-}
-
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.style.opacity = '1';
-  setTimeout(() => el.style.opacity = '0', 2000);
-}
-
-function spawnFloat(x, y, val) {
-  const el = document.createElement('div');
-  el.className = 'float-num';
-  el.textContent = '+' + fmt(val);
-  el.style.left = (x - 30) + 'px';
-  el.style.top = (y - 20) + 'px';
+let floatThrottle=0;
+function spawnFloat(x,y,val){
+  const now=Date.now();
+  if(now-floatThrottle<80) return;
+  floatThrottle=now;
+  const el=document.createElement('div');
+  el.className='float-num';
+  el.textContent='+'+fmt(val);
+  el.style.left=(x-30)+'px';
+  el.style.top=(y-20)+'px';
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1000);
+  setTimeout(()=>el.remove(),1000);
 }
 
-function renderMoney() {
-  document.getElementById('money-amount').textContent = fmt(G.money);
-  document.getElementById('money-per-sec').textContent = fmt(incomePerSec()) + ' / sec';
-  document.getElementById('click-value').textContent = '+' + fmt(clickValue()) + ' per click';
-  document.getElementById('stat-clicks').textContent = G.clicks.toLocaleString();
-  document.getElementById('stat-total').textContent = fmt(G.totalEarned);
-  document.getElementById('stat-prestige').textContent = G.prestige;
-  const prestigeReady = G.totalEarned >= 1000000;
-  document.getElementById('prestige-btn').className = prestigeReady ? 'ready' : '';
-  document.getElementById('prestige-info').textContent = prestigeReady
-    ? 'Ready to prestige! +×1.5 multiplier 🌟'
-    : 'Need ' + fmt(1000000 - G.totalEarned) + ' more to prestige';
+function renderMoney(){
+  document.getElementById('money-amount').textContent=fmt(G.money);
+  document.getElementById('money-per-sec').textContent=fmt(incomePerSec())+' / sec';
+  const cv=clickValue();
+  document.getElementById('click-value').textContent='+'+fmt(cv)+' per click';
+  document.getElementById('stat-clicks').textContent=G.clicks.toLocaleString();
+  document.getElementById('stat-total').textContent=fmt(G.totalEarned);
+  document.getElementById('stat-prestige').textContent=G.prestige;
+  const ready=G.totalEarned>=1000000;
+  document.getElementById('prestige-btn').className=ready?'ready':'';
+  document.getElementById('prestige-info').textContent=ready
+    ?'Ready to prestige! +×1.5 multiplier 🌟'
+    :'Need '+fmt(1000000-G.totalEarned)+' more to prestige';
 }
 
-function renderShop() {
-  // UPGRADES
-  const ul = document.getElementById('upgrades-list');
-  ul.innerHTML = '';
-  UPGRADES.forEach(u => {
-    const owned = G.upgrades[u.id];
-    const canAfford = G.money >= u.cost;
-    const div = document.createElement('div');
-    div.className = 'shop-item' + (owned ? ' locked' : (canAfford ? ' affordable' : ''));
-    div.innerHTML = `
-      <div class="item-icon">${u.icon}</div>
-      <div class="item-info">
-        <div class="item-name">${u.name}</div>
-        <div class="item-desc">${u.desc}</div>
-      </div>
-      <div class="item-right">
-        ${owned ? '<span class="item-owned">✓ owned</span>' : `<div class="item-cost">${fmt(u.cost)}</div>`}
-      </div>`;
-    if(!owned) {
-      div.onclick = () => buyUpgrade(u);
-    }
+function renderShop(){
+  const ul=document.getElementById('upgrades-list');
+  ul.innerHTML='';
+  UPGRADES.forEach(u=>{
+    const owned=G.upgrades[u.id];
+    const canAfford=G.money>=u.cost;
+    const div=document.createElement('div');
+    div.className='shop-item'+(owned?' locked':(canAfford?' affordable':''));
+    div.innerHTML=`<div class="item-icon">${u.icon}</div>
+      <div class="item-info"><div class="item-name">${u.name}</div><div class="item-desc">${u.desc}</div></div>
+      <div class="item-right">${owned?'<span class="item-owned">✓ owned</span>':`<div class="item-cost">${fmt(u.cost)}</div>`}</div>`;
+    if(!owned) div.onclick=()=>buyUpgrade(u);
     ul.appendChild(div);
   });
 
-  // BUILDINGS
-  const bl = document.getElementById('buildings-list');
-  bl.innerHTML = '';
-  BUILDINGS.forEach(b => {
-    const cnt = G.buildings[b.id] || 0;
-    const cost = buildingCost(b);
-    const canAfford = G.money >= cost;
-    const ips = (b.base * (cnt > 0 ? cnt : 1) * G.bizMult * G.prestigeMult);
-    const div = document.createElement('div');
-    div.className = 'shop-item' + (canAfford ? ' affordable' : '');
-    div.innerHTML = `
-      <div class="item-icon">${b.icon}</div>
-      <div class="item-info">
-        <div class="item-name">${b.name}</div>
-        <div class="item-desc">${cnt>0 ? fmt(ips)+'/s' : b.desc}</div>
-      </div>
-      <div class="item-right">
-        <div class="item-cost">${fmt(cost)}</div>
-        <div class="item-count">${cnt > 0 ? `owned: ${cnt}` : ''}</div>
-      </div>`;
-    div.onclick = () => buyBuilding(b);
+  const bl=document.getElementById('buildings-list');
+  bl.innerHTML='';
+  BUILDINGS.forEach(b=>{
+    const cnt=G.buildings[b.id]||0;
+    const cost=buildingCost(b);
+    const canAfford=G.money>=cost;
+    const ips=cnt>0?(b.base*cnt*G.bizMult*G.prestigeMult):0;
+    const div=document.createElement('div');
+    div.className='shop-item'+(canAfford?' affordable':'');
+    div.innerHTML=`<div class="item-icon">${b.icon}</div>
+      <div class="item-info"><div class="item-name">${b.name}</div><div class="item-desc">${cnt>0?fmt(ips)+'/s':b.desc}</div></div>
+      <div class="item-right"><div class="item-cost">${fmt(cost)}</div><div class="item-count">${cnt>0?'owned: '+cnt:''}</div></div>`;
+    div.onclick=()=>buyBuilding(b);
     bl.appendChild(div);
   });
 }
 
-function buyUpgrade(u) {
-  if(G.upgrades[u.id] || G.money < u.cost) return;
-  G.money -= u.cost;
-  G.upgrades[u.id] = true;
-  if(u.type === 'click') G.clickMult *= u.mult;
-  else G.bizMult *= u.mult;
-  showToast('✨ ' + u.name + ' purchased!');
-  renderShop();
-  renderMoney();
+function buyUpgrade(u){
+  if(G.upgrades[u.id]||G.money<u.cost) return;
+  G.money-=u.cost; G.upgrades[u.id]=true;
+  if(u.type==='click') G.clickMult*=u.mult; else G.bizMult*=u.mult;
+  showToast('✨ '+u.name+' purchased!');
+  renderShop(); renderMoney();
+}
+function buyBuilding(b){
+  const cost=buildingCost(b);
+  if(G.money<cost){showToast('Not enough money!');return;}
+  G.money-=cost; G.buildings[b.id]=(G.buildings[b.id]||0)+1;
+  renderShop(); renderMoney();
+}
+function doPrestige(){
+  G.prestige++; G.prestigeMult=Math.pow(1.5,G.prestige);
+  G.money=0; G.clicks=0; G.totalEarned=0;
+  G.clickMult=1; G.bizMult=1; G.upgrades={}; G.buildings={};
+  seenMilestones=new Set();
+  saveGame(); renderShop(); renderMoney();
+  showMilestone('🌟 Prestiged! ×'+G.prestigeMult.toFixed(1)+' multiplier active!');
 }
 
-function buyBuilding(b) {
-  const cost = buildingCost(b);
-  if(G.money < cost) { showToast('Not enough money!'); return; }
-  G.money -= cost;
-  G.buildings[b.id] = (G.buildings[b.id] || 0) + 1;
-  renderShop();
-  renderMoney();
-}
+// ─── HOLD TO AUTO-CLICK ───────────────────────────────────────────
+const btn = document.getElementById('lemon-btn');
+const hint = document.getElementById('hold-hint');
+let isHolding = false;
+let holdInterval = null;
+let lastClickPos = {x: 0, y: 0};
+const HOLD_DELAY = 500;    // ms before auto-click kicks in
+const AUTO_CPS = 8;        // clicks per second while holding
+let holdTimer = null;
 
-function doPrestige() {
-  G.prestige++;
-  G.prestigeMult = Math.pow(1.5, G.prestige);
-  G.money = 0;
-  G.clicks = 0;
-  G.totalEarned = 0;
-  G.clickMult = 1;
-  G.bizMult = 1;
-  G.upgrades = {};
-  G.buildings = {};
-  seenMilestones = new Set();
-  saveGame();
-  renderShop();
-  renderMoney();
-  showMilestone('🌟 Prestiged! ×' + G.prestigeMult.toFixed(1) + ' multiplier active!');
-}
-
-// Click handler
-document.getElementById('lemon-btn').addEventListener('click', e => {
+function doClick(x, y){
   const val = clickValue();
   G.money += val;
   G.totalEarned += val;
   G.clicks++;
   checkMilestones();
-  spawnFloat(e.clientX, e.clientY, val);
+  spawnFloat(x || lastClickPos.x, y || lastClickPos.y, val);
   renderMoney();
-  if(G.clicks % 20 === 0) renderShop();
-});
+  if(G.clicks % 15 === 0) renderShop();
+}
 
-document.getElementById('prestige-btn').addEventListener('click', () => {
-  if(G.totalEarned < 1000000) return;
+function startHold(x, y){
+  if(isHolding) return;
+  isHolding = true;
+  lastClickPos = {x, y};
+  btn.classList.add('pressed');
+  // single click immediately
+  doClick(x, y);
+  // after HOLD_DELAY, start rapid fire
+  holdTimer = setTimeout(()=>{
+    btn.classList.remove('pressed');
+    btn.classList.add('holding');
+    hint.classList.add('active');
+    hint.textContent = 'Auto-clicking! 🍋🍋🍋';
+    holdInterval = setInterval(()=>{
+      doClick(lastClickPos.x, lastClickPos.y);
+    }, 1000 / AUTO_CPS);
+  }, HOLD_DELAY);
+}
+
+function endHold(){
+  if(!isHolding) return;
+  isHolding = false;
+  clearTimeout(holdTimer);
+  clearInterval(holdInterval);
+  holdInterval = null;
+  btn.classList.remove('pressed','holding');
+  hint.classList.remove('active');
+  hint.textContent = 'Hold to auto-click 🍋';
+}
+
+// Mouse
+btn.addEventListener('mousedown', e=>{ e.preventDefault(); startHold(e.clientX, e.clientY); });
+document.addEventListener('mouseup', ()=>{ if(isHolding) endHold(); });
+// Touch
+btn.addEventListener('touchstart', e=>{ e.preventDefault(); const t=e.touches[0]; startHold(t.clientX, t.clientY); }, {passive:false});
+document.addEventListener('touchend', ()=>{ if(isHolding) endHold(); });
+document.addEventListener('touchcancel', ()=>{ if(isHolding) endHold(); });
+// Update float position on move
+btn.addEventListener('mousemove', e=>{ lastClickPos={x:e.clientX,y:e.clientY}; });
+
+document.getElementById('prestige-btn').addEventListener('click',()=>{
+  if(G.totalEarned<1000000) return;
   document.getElementById('prestige-modal').classList.add('show');
 });
-document.getElementById('cancel-prestige').addEventListener('click', () => {
-  document.getElementById('prestige-modal').classList.remove('show');
-});
-document.getElementById('confirm-prestige').addEventListener('click', () => {
+document.getElementById('cancel-prestige').addEventListener('click',()=>document.getElementById('prestige-modal').classList.remove('show'));
+document.getElementById('confirm-prestige').addEventListener('click',()=>{
   document.getElementById('prestige-modal').classList.remove('show');
   doPrestige();
 });
 
 // Game loop
-let lastTick = Date.now();
-function gameTick() {
-  const now = Date.now();
-  const dt = (now - lastTick) / 1000;
-  lastTick = now;
-  const income = incomePerSec() * dt;
-  if(income > 0) {
-    G.money += income;
-    G.totalEarned += income;
-    checkMilestones();
-    renderMoney();
-    if(Math.floor(G.totalEarned * 10) % 50 === 0) renderShop();
+let lastTick=Date.now();
+function gameTick(){
+  const now=Date.now();
+  const dt=(now-lastTick)/1000;
+  lastTick=now;
+  const income=incomePerSec()*dt;
+  if(income>0){
+    G.money+=income; G.totalEarned+=income;
+    checkMilestones(); renderMoney();
+    if(Math.random()<0.05) renderShop();
   }
   requestAnimationFrame(gameTick);
 }
 
-// Auto-save
-setInterval(saveGame, 10000);
-
-// Init
+setInterval(saveGame,10000);
 loadGame();
 renderMoney();
 renderShop();
